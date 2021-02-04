@@ -3625,6 +3625,10 @@ table.table-inbox tbody tr.checked {
     border-radius: 50%;
 }
 
+.Qrcode img{
+	width: 120px;
+}
+
 /*-----------------
 	25. Responsive
 -----------------------*/

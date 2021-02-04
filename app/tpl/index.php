@@ -17,7 +17,7 @@
 
 <h1>{$title}</h1>
 
-<div id="Qrcode"></div>
+<div id="Qrcode" class="Qrcode"></div>
 
 {include('_footer.php')}
 
