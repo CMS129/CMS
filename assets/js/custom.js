@@ -93,8 +93,8 @@
 		height: 256,
 		correctLevel: 3, // L,7% M,15% Q,25% H,30%
 		text: $(location).attr('href'),
-		background:"#ffffff",
-		foreground:"#990033",
+		background:"#FFFFFF",
+		foreground:"#000000",
 		src:"/assets/img/qrcode.png", // 120px, 120px
 	});
 
