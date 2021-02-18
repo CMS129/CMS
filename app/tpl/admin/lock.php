@@ -3,6 +3,10 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="x-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+<meta name="applicable-device" content="pc,mobile">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
 {include('_header.php')}
 
@@ -11,7 +15,6 @@
 
 <!-- Main Wrapper -->
 <div class="main-wrapper login-body">
-
 	<div class="login-wrapper">
 		<div class="container">
 		<img class="img-fluid logo-dark mb-4" src="assets/img/logo.png" alt="Logo">
