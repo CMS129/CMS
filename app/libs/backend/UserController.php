@@ -182,18 +182,12 @@ class UserController extends BaseController
                 }
 
                 $inPwd = Api::coms()->getSrt('active', trim(substr($loginpwd, 0, -32)));
-                $dbData = Api::coms()->getDB()->field('user_id,user_name,user_pwd,user_lock,user_session,user_del')->where(array('user_id' => unserialize(Api::session()->getSession('user'))['id']))->limit(1)->select('user');
+                $dbData = Api::coms()->getDB()->field('user_id,user_pwd,user_lock,user_session')->where(array('user_id' => unserialize(Api::session()->getSession('user'))['id']))->limit(1)->select('user');
 
                 if (($dbData[0]['user_session'] === md5('000000')) && ($dbData[0]['user_lock'] === md5($inPwd))) {
                     Api::coms()->getDB()->where(array('user_id' => trim($dbData[0]['user_id'])))->update('user', array('user_lock' => $dbData[0]['user_pwd'], 'user_session' => md5(Api::request()->cookies[Api::coms()->getSessionName()]), 'user_ip' => trim(Api::coms()->getSrt('ip', Api::request()->ip)), 'user_logintime' => time()));
 
-                    Api::session()->setSession('user', serialize(array('id' => $dbData[0]['user_id'], 'user' => $dbData[0]['user_name'], 'lock' => $dbData[0]['user_lock'], 'sess' => md5(Api::request()->cookies[Api::coms()->getSessionName()]), 'del' => trim($dbData[0]['user_del']))));
-
-                    Api::cookies()->setCookie('sid', array('id' => md5($dbData[0]['user_id']), 'sess' => md5(Api::request()->cookies[Api::coms()->getSessionName()]), 'del' => trim($dbData[0]['user_del'])));
-
-                    Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
-
-                    Api::redirect('/admin-index', 302);
+                    Api::redirect('/login', 302);
                 } else {
                     header("Cache-control:no-cache,no-store,must-revalidate");
                     header("Pragma:no-cache");
@@ -266,15 +260,9 @@ class UserController extends BaseController
 
                         Api::coms()->getDB()->where(array('user_id' => $dbData[0]['user_id']))->update('user', array('user_pwd' => md5($loginpwd), 'user_lock' => md5($loginpwd), 'user_session' => md5(Api::request()->cookies[Api::coms()->getSessionName()]), 'user_del' => 0, 'user_ip' => trim(Api::coms()->getSrt('ip', Api::request()->ip)), 'user_logintime' => time()));
 
-                        Api::session()->setSession('user', serialize(array('id' => $dbData[0]['user_id'], 'user' => $dbData[0]['user_name'], 'lock' => md5($loginpwd), 'sess' => md5(Api::request()->cookies[Api::coms()->getSessionName()]), 'del' => trim($dbData[0]['user_del']))));
-
-                        Api::cookies()->setCookie('sid', array('id' => md5($dbData[0]['user_id']), 'sess' => md5(Api::request()->cookies[Api::coms()->getSessionName()]), 'del' => trim($dbData[0]['user_del'])));
-
-                        Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
-
                         Api::coms()->getSMTP($inEmail, trim($dbData[0]['user_name']), '[' . Api::coms()->getTitle() . '] 密码重置成功说明', Api::coms()->getResetMB(trim($dbData[0]['user_name']), $inEmail));
 
-                        Api::redirect('/admin-index', 302);
+                        Api::redirect('/login', 302);
                     } else {
                         Api::redirect('/forgot-password', 302);
                     }
