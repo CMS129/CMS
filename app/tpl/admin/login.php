@@ -23,7 +23,7 @@
 						<form action="{$site_url}/login" method="post">
 							<div class="form-group">
 								<label class="form-control-label">用户名</label>
-								<input type="text" class="form-control" name="loginname" value="" tabindex="1" autocomplete="off" _input="true" placeholder="用户名或邮箱">
+								<input type="text" class="form-control" name="loginname" value="" tabindex="1" autocomplete="off" _input="true" placeholder="用户名">
 							</div>
 
 							<div class="form-group">
