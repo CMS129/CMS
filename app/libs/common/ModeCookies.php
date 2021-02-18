@@ -27,7 +27,18 @@ class ModeCookies extends Common {
         $cookie_value = $this->authcodeCookie($cookie_value, 'ENCODE');
 
         if ($cookie_name && $cookie_value && $cookie_expire) {
-            setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), TRUE);
+            if(PHP_VERSION_ID < 70300) {
+                setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), TRUE);
+            } else {
+                setcookie($cookie_name, $cookie_value, [
+                    'expires' => $cookie_expire,
+                    'path' => '/',
+                    'domain' => $this->getDomain(),
+                    'secure' => (strtolower($this->request()->scheme)=='http'?FALSE:TRUE),
+                    'httponly' => true,
+                    'samesite' => 'lax'
+                ]);
+            }
         }
     }
 
@@ -59,7 +70,18 @@ class ModeCookies extends Common {
         $cookie_expire = time() + ($expire ? $expire : $this->getCookieTime());
 
         if ($name && $value && $cookie_expire) {
-            setcookie($name, $value, $cookie_expire, '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), FALSE);
+            if(PHP_VERSION_ID < 70300) {
+                setcookie($name, $value, $cookie_expire, '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), TRUE);
+            } else {
+                setcookie($name, $value, [
+                    'expires' => $cookie_expire,
+                    'path' => '/',
+                    'domain' => $this->getDomain(),
+                    'secure' => (strtolower($this->request()->scheme)=='http'?FALSE:TRUE),
+                    'httponly' => true,
+                    'samesite' => 'lax'
+                ]);
+            }
         }
     }
 
@@ -100,7 +122,18 @@ class ModeCookies extends Common {
                 $cookie_value = $this->authcodeCookie($cookie_value, 'ENCODE');
 
                 if ($cookie_name && $cookie_value && $cookie_expire) {
-                    setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), TRUE);
+                    if(PHP_VERSION_ID < 70300) {
+                        setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), TRUE);
+                    } else {
+                        setcookie($cookie_name, $cookie_value, [
+                            'expires' => $cookie_expire,
+                            'path' => '/',
+                            'domain' => $this->getDomain(),
+                            'secure' => (strtolower($this->request()->scheme)=='http'?FALSE:TRUE),
+                            'httponly' => true,
+                            'samesite' => 'lax'
+                        ]);
+                    }
                     return true;
                 }
             }
@@ -114,7 +147,18 @@ class ModeCookies extends Common {
     public function delCookie($name) {
 
         $cookie_name = $this->getName($name);
-        setcookie($cookie_name, "", time() - $this->getCookieTime(), '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), TRUE);
+        if(PHP_VERSION_ID < 70300) {
+            setcookie($cookie_name, "", time() - $this->getCookieTime(), '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)=='http'?FALSE:TRUE), TRUE);
+        } else {
+            setcookie($cookie_name, "", [
+                'expires' => time() - $this->getCookieTime(),
+                'path' => '/',
+                'domain' => $this->getDomain(),
+                'secure' => (strtolower($this->request()->scheme)=='http'?FALSE:TRUE),
+                'httponly' => true,
+                'samesite' => 'lax'
+            ]);
+        }
     }
 
     /** 获取cookie name 
