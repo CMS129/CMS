@@ -30,7 +30,7 @@
 						<form action="{$site_url}/admin-lock" method="post">
 							<div class="form-group">
 								<label class="form-control-label">解锁密码</label>
-								<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="1" placeholder="请填写解锁密码">
+								<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="1" placeholder="请填写解锁密码" required>
                                 <input type="hidden" class="form-control" name="__hash__" id="__hash__" value="{$token}">
 							    <input type="hidden" class="form-control" name="pubKey" id="pubKey" value="{$pubKey}">
 							</div>

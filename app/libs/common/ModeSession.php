@@ -11,14 +11,14 @@ class ModeSession extends Common {
      */
     public function Session() {
         register_shutdown_function('session_write_close');
-        if(PHP_VERSION_ID < 70300) {
-            session_set_cookie_params($this->getSessionTime(), '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)==='http'?FALSE:TRUE), TRUE);
+        if (PHP_VERSION_ID < 70300) {
+            session_set_cookie_params($this->getSessionTime(), '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme)==='http')?FALSE:TRUE), TRUE);
         } else {
             session_set_cookie_params([
                 'lifetime' => $this->getSessionTime(),
                 'path' => '/',
                 'domain' => $this->getDomain(),
-                'secure' => (strtolower($this->request()->scheme)==='http'?FALSE:TRUE),
+                'secure' => ((strtolower($this->request()->scheme)==='http')?FALSE:TRUE),
                 'httponly' => TRUE,
                 'samesite' => 'lax'
             ]);
@@ -26,9 +26,9 @@ class ModeSession extends Common {
         session_name($this->getSessionName());
         session_start();
 
-        setcookie($this->getSessionName(), session_id(), time() + $this->getSessionTime(), '/; samesite=lax', $this->getDomain(), (strtolower($this->request()->scheme)==='http'?FALSE:TRUE), TRUE);
+        setcookie($this->getSessionName(), session_id(), time() + $this->getSessionTime(), '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme)==='http')?FALSE:TRUE), TRUE);
 
-        if(empty($this->getSession('key'))||$this->getMsectime()>unserialize($this->getSession('key'))['time']){
+        if (empty($this->getSession('key')) || $this->getMsectime() > unserialize($this->getSession('key'))['time']) {
             $this->setSession('key', serialize(array('id'=>md5(uniqid().$this->getMsectime()),'time'=>$this->getMsectime()+$this->getTokenTime()*1000)));
         }
 
@@ -54,7 +54,7 @@ class ModeSession extends Common {
      * @return mixed
      */
     public function getSession($name) {
-        if(isset($_SESSION[$name])){
+        if (isset($_SESSION[$name])){
             return $_SESSION[$name];
         } else {
             return false;

@@ -27,13 +27,13 @@
 						<form action="{$site_url}/login" method="post">
 							<div class="form-group">
 								<label class="form-control-label">用户名</label>
-								<input type="text" class="form-control" name="loginname" value="" tabindex="1" autocomplete="off" _input="true" placeholder="用户名">
+								<input type="text" class="form-control" name="loginname" value="" tabindex="1" autocomplete="off" _input="true" placeholder="用户名" required>
 							</div>
 
 							<div class="form-group">
 								<label class="form-control-label">密码</label>
 								<div class="pass-group">
-									<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="2" placeholder="密码">
+									<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="2" placeholder="密码" required>
 									<span class="fa fa-eye toggle-password" aria-hidden="true"></span>
 								</div>
 							</div>

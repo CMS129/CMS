@@ -27,7 +27,7 @@
 						<form action="{$site_url}/forgot-password" method="post">
 							<div class="form-group">
 								<label class="form-control-label">邮件地址</label>
-								<input class="form-control" type="text" name="loginmail" id="loginmail" value="" autocomplete="off" _input="true" tabindex="1" placeholder="请填写注册邮箱地址">
+								<input class="form-control" type="text" name="loginmail" id="loginmail" value="" autocomplete="off" _input="true" tabindex="1" placeholder="请填写注册邮箱地址" required>
 							</div>
 							<div class="form-group mb-0">
 							    <input type="hidden" class="form-control" name="__hash__" id="__hash__" value="{$token}">

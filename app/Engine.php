@@ -277,7 +277,9 @@ class Engine {
      * @return mixed
      */
     public function get($key = null) {
-        if ($key === null) return $this->vars;
+        if ($key === null) {
+            return $this->vars;
+        }
 
         return isset($this->vars[$key]) ? $this->vars[$key] : null;
     }
@@ -375,7 +377,9 @@ class Engine {
 
             $dispatched = true;
 
-            if (!$continue) break;
+            if (!$continue) {
+                break;
+            }
 
             $router->next();
 

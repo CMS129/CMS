@@ -151,8 +151,8 @@ class MySQLPDO extends Common {
         $table_column = $this->_tbFields($tbName);
         $ret = array();
         foreach ($data as $key => $val) {
-            if(is_array($val)&&!empty($val[1])) {
-                $ret = array_merge($ret,$this->_dataFormat(trim($this->_prefix).$val[0], $val[1]));
+            if(is_array($val) && !empty($val[1])) {
+                $ret = array_merge($ret, $this->_dataFormat(trim($this->_prefix).$val[0], $val[1]));
             } else {
                 if (!is_scalar($val)) { continue; } //值不是标量则跳过
                 if (array_key_exists($key, $table_column)) {

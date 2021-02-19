@@ -18,11 +18,12 @@ class BaseController
                 Api::redirect('/active', 302);
             }
 
-            if ((Api::request()->url != '/admin-lock') && (Api::coms()->getMsectime() > (Api::cookies()->getCookie('lock')['time'] + ceil(Api::coms()->getLookTime())))) {
+            if ((Api::request()->url != '/admin-lock') && ((Api::cookies()->getCookie('lock')['time'] + ceil(Api::coms()->getLookTime())) < Api::coms()->getMsectime())) {
                 Api::redirect('/admin-lock', 302);
+            } else {
+                Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
             }
 
-            Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
             return true;
         } else {
             header("Cache-control:no-cache,no-store,must-revalidate");

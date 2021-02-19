@@ -27,18 +27,18 @@
 						<form action="{$site_url}/register" method="post">
 							<div class="form-group">
 								<label class="form-control-label">用户名</label>
-								<input type="text" class="form-control" name="loginname" value="" tabindex="1" autocomplete="off" _input="true" placeholder="请设置用户名">
+								<input type="text" class="form-control" name="loginname" value="" tabindex="1" autocomplete="off" _input="true" placeholder="请设置用户名" required>
 							</div>
 
 							<div class="form-group">
 								<label class="form-control-label">邮箱</label>
-								<input type="text" class="form-control" name="loginmail" value="" tabindex="2" autocomplete="off" _input="true" placeholder="可用于找回密码">
+								<input type="text" class="form-control" name="loginmail" value="" tabindex="2" autocomplete="off" _input="true" placeholder="可用于找回密码" required>
 							</div>
 
 							<div class="form-group">
 								<label class="form-control-label">密码</label>
 								<div class="pass-group">
-									<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="3" placeholder="请设置登陆密码">
+									<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="3" placeholder="请设置登陆密码" required>
 									<span class="fa fa-eye toggle-password" aria-hidden="true"></span>
 								</div>
 							</div>

@@ -28,7 +28,7 @@
 						    <div class="form-group"></div>
                             <div class="form-group">
 								<div class="pass-group">
-									<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="1" placeholder="请设置新密码">
+									<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="1" placeholder="请设置新密码" required>
 									<span class="fa fa-eye toggle-password" aria-hidden="true"></span>
 								</div>
 							</div>

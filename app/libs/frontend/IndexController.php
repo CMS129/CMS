@@ -15,7 +15,7 @@ class IndexController extends BaseController{
     public static function index() {
         //parent::__checkManagePrivate();
 
-        // if(!Api::cookies()->getDoCookie('o2State')) {
+        // if (!Api::cookies()->getDoCookie('o2State')) {
         //     Api::cookies()->setCookie('bm', '1');
         //     Api::cookies()->setDoCookie('o2State', '1');
         // } else {

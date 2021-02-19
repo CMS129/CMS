@@ -66,10 +66,10 @@ class View {
         '~\{:(.+?)\}~' => '<?php echo $1 ?>',
         # {:strip_tags($a)}
 
-        '~\{loop\s+(\S+)\s+(\S+)\}~' => '<?php if(is_array(\\1)) foreach(\\1 as \\2) { ?>',
+        '~\{loop\s+(\S+)\s+(\S+)\}~' => '<?php if (is_array(\\1)) foreach(\\1 as \\2) { ?>',
         # {loop $array $vaule}
 
-        '~\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}~' => '<?php if(is_array(\\1)) foreach (\\1 as \\2 => \\3) { ?>',
+        '~\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}~' => '<?php if (is_array(\\1)) foreach (\\1 as \\2 => \\3) { ?>',
         # {loop $array $key $value}
 
         '~\{\/loop\}~' => '<?php } ?>',
@@ -78,7 +78,7 @@ class View {
         '~\{if\s+(.+?)\}~' => '<?php if (\\1) { ?>',
         # {if condition}
 
-        '~\{elseif\s+(.+?)\}~' => '<?php }elseif(\\1){ ?>',
+        '~\{elseif\s+(.+?)\}~' => '<?php }elseif (\\1){ ?>',
         # {elseif condition}
 
         '~\{else\}~' => '<?php }else{ ?>',
@@ -171,7 +171,7 @@ class View {
 
         extract($this->vars);
 
-        if(!is_dir($this->cache)) {
+        if (!is_dir($this->cache)) {
             $this->mkdirs($this->cache);
         }
 
@@ -260,9 +260,9 @@ class View {
      * @return bool path
      */
     private function mkdirs($path) {
-        if(!is_dir($path)) {
+        if (!is_dir($path)) {
             $this->mkdirs(dirname($path));
-            if(!mkdir($path, 0755)) {
+            if (!mkdir($path, 0755)) {
                 return false;
             }
         }

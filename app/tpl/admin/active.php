@@ -28,7 +28,7 @@
 						    <div class="form-group"></div>
                             <div class="form-group">
 								<div class="pass-group">
-									<input type="text" class="form-control" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="1" placeholder="激活验证码">
+									<input type="text" class="form-control" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="1" placeholder="激活验证码" required>
 								</div>
 							</div>
                             <div class="form-group"></div>

@@ -114,7 +114,9 @@ class Dispatcher {
         $args = array(&$params, &$output);
         foreach ($filters as $callback) {
             $continue = $this->execute($callback, $args);
-            if ($continue === false) break;
+            if ($continue === false) {
+                break;
+            }
         }
     }
 

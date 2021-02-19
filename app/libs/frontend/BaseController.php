@@ -10,9 +10,9 @@ class BaseController {
      * @param  boolean $force [description]
      * @return [type]         [description]
      */
-    protected static function __checkManagePrivate() {
-        //if(empty(Api::request()->cookies->o2State)) {
+    //protected static function __checkManagePrivate() {
+        //if (empty(Api::request()->cookies->o2State)) {
             //Api::render('error');
         //}
-    }
+    //}
 }
