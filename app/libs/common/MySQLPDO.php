@@ -295,7 +295,7 @@ class MySQLPDO extends Common {
         }
         $this->_join = '';
         $conditionis = '';
-        if (!empty($option)&&is_array($option)) {
+        if (!empty($option) && is_array($option)) {
             if(is_array($option[0])) {
                 foreach ($option as $k => $v) {
                     if (is_array($v[2][0])) {

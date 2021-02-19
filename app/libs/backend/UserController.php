@@ -34,7 +34,7 @@ class UserController extends BaseController
                 Api::redirect('/login', 302);
             }
 
-            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === (Api::coms()->getTokenID('GET'))) && ($toke['post'] === (Api::coms()->getTokenID('POST')))) {
+            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === Api::coms()->getTokenID('GET')) && ($toke['post'] === Api::coms()->getTokenID('POST'))) {
                 Api::session()->delSession('token');
 
                 $proxy_ip = Api::coms()->getSrt('ip', Api::request()->proxy_ip);
@@ -111,7 +111,7 @@ class UserController extends BaseController
                 Api::redirect('/register', 302);
             }
 
-            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === (Api::coms()->getTokenID('GET'))) && ($toke['post'] === (Api::coms()->getTokenID('POST')))) {
+            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === Api::coms()->getTokenID('GET')) && ($toke['post'] === Api::coms()->getTokenID('POST'))) {
                 Api::session()->delSession('token');
 
                 $proxy_ip = Api::coms()->getSrt('ip', Api::request()->proxy_ip);
@@ -170,7 +170,7 @@ class UserController extends BaseController
                 Api::redirect('/active', 302);
             }
 
-            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === (Api::coms()->getTokenID('GET'))) && ($toke['post'] === (Api::coms()->getTokenID('POST')))) {
+            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === Api::coms()->getTokenID('GET')) && ($toke['post'] === Api::coms()->getTokenID('POST'))) {
                 Api::session()->delSession('token');
 
                 $proxy_ip = Api::coms()->getSrt('ip', Api::request()->proxy_ip);
@@ -230,7 +230,7 @@ class UserController extends BaseController
             if (Api::coms()->getMsectime() > $toke['time']) {
                 Api::redirect('/forgot-password', 302);
             }
-            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === (Api::coms()->getTokenID('GET'))) && ($toke['post'] === (Api::coms()->getTokenID('POST')))) {
+            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === Api::coms()->getTokenID('GET')) && ($toke['post'] === Api::coms()->getTokenID('POST'))) {
                 Api::session()->delSession('token');
 
                 $proxy_ip = Api::coms()->getSrt('ip', Api::request()->proxy_ip);
@@ -316,7 +316,7 @@ class UserController extends BaseController
                 Api::redirect('/admin-lock', 302);
             }
 
-            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === (Api::coms()->getTokenID('GET'))) && ($toke['post'] === (Api::coms()->getTokenID('POST')))) {
+            if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === Api::coms()->getTokenID('GET')) && ($toke['post'] === Api::coms()->getTokenID('POST'))) {
                 Api::session()->delSession('token');
 
                 $proxy_ip = Api::coms()->getSrt('ip', Api::request()->proxy_ip);
