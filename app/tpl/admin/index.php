@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('_header.php')}
+{include('admin/_header.php')}
 
 </head>
 <body>
@@ -21,10 +21,10 @@
         <!-- Logo -->
 		<div class="header-left">
 			<a href="/admin-index" class="logo">
-				<img src="/assets/img/logo.png" alt="Logo">
+				<img src="{$site_url}/assets/img/logo.png" alt="Logo">
 			</a>
 			<a href="/admin-index" class="logo logo-small">
-				<img src="/assets/img/logo-small.png" alt="Logo" width="30" height="30">
+				<img src="{$site_url}/assets/img/logo-small.png" alt="Logo" width="30" height="30">
 			</a>
 		</div>
 		<!-- /Logo -->
@@ -56,7 +56,7 @@
 			<li class="nav-item dropdown has-arrow main-drop">
 				<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 					<span class="user-img">
-						<img src="/assets/img/profiles/avatar-02.jpg" alt="user">
+						<img src="{$site_url}/assets/img/profiles/avatar-02.jpg" alt="user">
 						<span class="status online"></span>
 					</span>
 					<span>{$user}</span>
@@ -228,7 +228,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('_footer.php')}
+{include('admin/_footer.php')}
 
 </body>
 </html>

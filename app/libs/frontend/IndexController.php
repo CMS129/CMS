@@ -46,7 +46,7 @@ class IndexController extends BaseController{
 
         // print_r(Api::coms()->getDB()->field('*')->where(array('user_md5'=>'21232f297a57a5a743894a0e4a801fc3'))->limit(1)->select('user'));
 
-        Api::render('index', array('title' => Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL()));
+        Api::render('index', array('title' => Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL(), 'email' => Api::coms()->getEmail()));
     }
 
     /**

@@ -10,7 +10,7 @@
 <title>{$seo_title}-{$title}</title>
 <meta name="keywords" content="{$title}">
 <meta name="description" content="{$title}">
-{include('_header.php')}
+{include('admin/_header.php')}
 
 <style>
 .terms {width: 90%; margin: 0 auto; padding: 55px 0;}
@@ -30,11 +30,11 @@
 
         <!-- Logo -->
 		<div class="header-left">
-			<a href="/privacy" class="logo">
-				<img src="/assets/img/logo.png" alt="Logo">
+			<a href="{$site_url}" class="logo">
+				<img src="{$site_url}/assets/img/logo.png" alt="Logo">
 			</a>
 			<a href="/privacy" class="logo logo-small">
-				<img src="/assets/img/logo-small.png" alt="Logo" width="30" height="30">
+				<img src="{$site_url}/assets/img/logo-small.png" alt="Logo" width="30" height="30">
 			</a>
 		</div>
 		<!-- /Logo -->
@@ -104,7 +104,7 @@
             <h5>2.{$title}如何使用您的个人信息</h5>
             <p>当{$title}需要履行在用户协议和/或服务合同下对您的义务、或{$title}受约束的法定义务或者经由评估{$title}认为对于保护{$title}或第三方的合法利益有必要时，{$title}将在取得你同意的前提下，出于本隐私政策中描述的目的对你的个人信息进行处理。{$title}将严格遵守本隐私政策及其更新所载明的内容来使用您的个人信息。{$title}会将您的个人信息用于以下目的：</p>
             <p>（1）<strong>创建和维护您的帐号。</strong>{$title}将使用数据创建和维护您的帐号。</p>
-            <p>（2）<strong>处理订购单。</strong>{$title}将使用数据处理订购单和相关的售后服务，包括客户支持、订单配送、发票打印、商品兑换等。</p>
+            <p>（2）<strong>处理订购单。</strong>{$title}将使用数据处理订购单和相关的售后服务，包括客户支持、订单配送、单据打印、商品兑换等。</p>
             <p>（3）<strong>提供通知和推送服务。</strong>{$title}可能使用您的数据向您提供 产品或第三方的内容推送或通知服务，包括资讯、软件更新和安装、销售和促销信息等。</p>
             <p>（4）<strong>提供基于位置的服务。</strong>{$title}或第三方将使用位置信息以为您提供更具针对性地服务，以获得尽可能好的用户体验，例如天气信息、配送信息、具有地域针对性的产品消息推送服务。</p>
             <p>（5）<strong>登录支持帐号的关联公司或第三方提供的产品与服务。</strong>通过帐号您可以登录支持帐号的关联公司或第三方提供的产品与服务，包括gitee等。</p>
@@ -191,7 +191,7 @@
     </div>
 </div>
 
-{include('_footer.php')}
+{include('admin/_footer.php')}
 
 </body>
 </html>

@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('_header.php')}
+{include('admin/_header.php')}
 
 </head>
 <body>
@@ -17,12 +17,12 @@
 <div class="main-wrapper login-body">
 	<div class="login-wrapper">
 		<div class="container">
-		<img class="img-fluid logo-dark mb-4" src="assets/img/logo.png" alt="Logo">
+		<img class="img-fluid logo-dark mb-4" src="{$site_url}/assets/img/logo.png" alt="Logo">
 			<div class="loginbox">
 				<div class="login-right">
 					<div class="login-right-wrap">
 						<div class="lock-user">
-							<img class="rounded-circle" src="assets/img/profiles/avatar-02.jpg" alt="User Image">
+							<img class="rounded-circle" src="{$site_url}/assets/img/profiles/avatar-02.jpg" alt="User Image">
 							<h4>{$uname}</h4>
 						</div>
 
@@ -49,7 +49,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('_footer.php')}
+{include('admin/_footer.php')}
 
 <script>
 $(function() {
