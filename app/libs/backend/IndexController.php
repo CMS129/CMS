@@ -14,8 +14,7 @@ class IndexController extends BaseController
     {
         parent::__checkManagePrivate();
 
-        $CMSCO = ['user' => unserialize(Api::session()->getSession('user'))['user'], 'title' => '管理后台-' . Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL()];
-        Api::render('admin/index', $CMSCO);
+        $CMSCO = ['user' => unserialize(Api::session()->getSession('user'))['user'], 'title' => '个人中心-' . Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL()];
+        Api::render('user/index', $CMSCO);
     }
-
 }

@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('admin/_header.php')}
+{include('user/_header.php')}
 
 </head>
 <body>
@@ -76,7 +76,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('admin/_footer.php')}
+{include('user/_footer.php')}
 
 <script>
 $(function() {

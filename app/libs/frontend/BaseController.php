@@ -4,9 +4,10 @@ namespace app\libs\frontend;
 
 use Api;
 
-class BaseController {
+class BaseController
+{
     /**
-     * 检测管理员权限
+     * 检测帐号权限
      * @param  boolean $force [description]
      * @return [type]         [description]
      */

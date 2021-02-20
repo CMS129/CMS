@@ -7,7 +7,7 @@ use Api;
 class BaseController
 {
     /**
-     * 检测管理员权限
+     * 检测帐号权限
      * @param  boolean $force [description]
      * @return [type]         [description]
      */
@@ -18,11 +18,11 @@ class BaseController
                 Api::redirect('/active', 302);
             }
 
-            if ((Api::request()->url != '/admin-lock') && ((ceil(Api::cookies()->getCookie('lock')['time']) + ceil(Api::coms()->getLookTime())) < Api::coms()->getMsectime())) {
-                Api::redirect('/admin-lock', 302);
+            if ((Api::request()->url != '/user-lock') && ((ceil(Api::cookies()->getCookie('lock')['time']) + ceil(Api::coms()->getLookTime())) < Api::coms()->getMsectime())) {
+                Api::redirect('/user-lock', 302);
             }
 
-            if (Api::request()->url != '/admin-lock') {
+            if (Api::request()->url != '/user-lock') {
                 Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
             }
 
@@ -36,5 +36,4 @@ class BaseController
             Api::redirect('/error.html', 301);
         }
     }
-
 }

@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('admin/_header.php')}
+{include('user/_header.php')}
 
 </head>
 <body>
@@ -22,7 +22,7 @@
 				<div class="login-right">
 
 				    <div class="login-right-wrap">
-					    <h1>会员激活</h1>
+					    <h1>帐号激活</h1>
                         <p class="account-subtitle">激活码已发送至您的电子邮箱</p>
 						<form action="{$site_url}/active" method="post">
 						    <div class="form-group"></div>
@@ -47,7 +47,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('admin/_footer.php')}
+{include('user/_footer.php')}
 
 <script>
 $(function() {

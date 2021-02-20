@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('admin/_header.php')}
+{include('user/_header.php')}
 
 </head>
 <body>
@@ -20,11 +20,11 @@
 
         <!-- Logo -->
 		<div class="header-left">
-			<a href="/admin-index" class="logo">
-				<img src="{$site_url}/assets/img/logo.png" alt="Logo">
+			<a href="/user-index" class="logo">
+				<img src="{$site_url}/assets/img/logo.png" alt="{$title}">
 			</a>
-			<a href="/admin-index" class="logo logo-small">
-				<img src="{$site_url}/assets/img/logo-small.png" alt="Logo" width="30" height="30">
+			<a href="/user-index" class="logo logo-small">
+				<img src="{$site_url}/assets/img/logo-small.png" alt="{$title}" width="30" height="30">
 			</a>
 		</div>
 		<!-- /Logo -->
@@ -62,8 +62,8 @@
 					<span>{$user}</span>
 				</a>
 				<div class="dropdown-menu">
-					<a class="dropdown-item" href="/settings"><i data-feather="settings" class="mr-1"></i> 设置</a>
-					<a class="dropdown-item" href="/logout"><i data-feather="log-out" class="mr-1"></i> 注销</a>
+					<a class="dropdown-item" href="/user-settings"><i data-feather="settings" class="mr-1"></i> 帐户设置</a>
+					<a class="dropdown-item" href="/logout"><i data-feather="log-out" class="mr-1"></i> 退出登录</a>
 				</div>
 			</li>
 			<!-- /User Menu -->
@@ -80,7 +80,10 @@
 				<ul>
 					<li class="menu-title"><span>Main</span></li>
 					<li class="active">
-						<a href="index.html"><i data-feather="home"></i> <span>Dashboard</span></a>
+						<a href="/user-index"><i data-feather="home"></i> <span>仪表盘</span></a>
+					</li>
+					<li>
+						<a href="/user-settings"><i data-feather="settings"></i> <span>帐户设置</span></a>
 					</li>
 					<li>
 						<a href="customers.html"><i data-feather="users"></i> <span>Customers</span></a>
@@ -228,7 +231,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('admin/_footer.php')}
+{include('user/_footer.php')}
 
 </body>
 </html>

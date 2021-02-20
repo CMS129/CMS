@@ -2,7 +2,8 @@
 
 namespace app\libs\common;
 
-class ModeRSA extends Common {
+class ModeRSA extends Common
+{
     /**
      * 签名算法， 默认为 OPENSSL_ALGO_SHA1
      */
@@ -30,7 +31,8 @@ class ModeRSA extends Common {
      * 初始化秘钥信息
      * @var string
      */
-    public function __construct($public_key_file = false, $private_key_file = false, $third_key_file = false) {
+    public function __construct($public_key_file = false, $private_key_file = false, $third_key_file = false)
+    {
         self::$publicKey = $public_key_file;
         self::$privateKey = $private_key_file;
         self::$thirdPublicKey = $third_key_file;
@@ -40,7 +42,8 @@ class ModeRSA extends Common {
      * 防止克隆
      * @var string
      */
-    private function __clone() {
+    private function __clone()
+    {
         self::$publicKey = null;
         self::$privateKey = null;
         self::$thirdPublicKey = null;
@@ -51,7 +54,8 @@ class ModeRSA extends Common {
      * @param $source
      * @return mixed
      */
-    private static function getKeyBitDetail($source) {
+    private static function getKeyBitDetail($source)
+    {
         return openssl_pkey_get_details($source)['bits'];
     }
 
@@ -60,7 +64,8 @@ class ModeRSA extends Common {
      * 由于各个语言以及环境使用的证书格式不同。参考下一节： ### 秘钥格式解析
      * @return bool|resource
      */
-    private static function getPrivateKey() {
+    private static function getPrivateKey()
+    {
         //if (file_exists(self::$publicKey)) {
         //$source =  file_get_contents(self::$privateKey);
         $source =  self::$privateKey;
@@ -82,7 +87,8 @@ class ModeRSA extends Common {
      * 获取公钥 并重新格式化
      * @return resource
      */
-    private static function getPublicKey() {
+    private static function getPublicKey()
+    {
         //if (file_exists(self::$publicKey)) {
         //$source = file_get_contents(self::$publicKey);
         $source =  self::$publicKey;
@@ -104,7 +110,8 @@ class ModeRSA extends Common {
      * 获取第三方公钥，并格式化
      * @return resource
      */
-    private static function getPublicKeyThird() {
+    private static function getPublicKeyThird()
+    {
         //if (file_exists(self::$thirdPublicKey)) {
         //$source = file_get_contents(self::$thirdPublicKey);
         $source =  self::$thirdPublicKey;
@@ -126,7 +133,8 @@ class ModeRSA extends Common {
      * 排序数据并生成待验签字符串（类似微信支付，使用此方法，而非例子中json_encode方法）
      * @return string
      */
-    private static function createLinkString($data = array()) {
+    private static function createLinkString($data = array())
+    {
         unset($data['sign']);
 
         foreach ($data as $key => $val) {
@@ -143,7 +151,8 @@ class ModeRSA extends Common {
      * 排序数据并生成待验签字符串（类似微信支付，使用此方法，而非例子中json_encode方法）
      * @return string
      */
-    public static function createLinkStringNew($data = array()) {
+    public static function createLinkStringNew($data = array())
+    {
         $mac = false;
         ksort($data);
         unset($data['sign'], $data['sign_type']);
@@ -162,7 +171,8 @@ class ModeRSA extends Common {
      * @param $data
      * @return bool|null
      */
-    public static function privEncrypt($data = false) {
+    public static function privEncrypt($data = false)
+    {
         $privKey = self::getPrivateKey();
 
         $partLen = self::getKeyBitDetail($privKey) / 8 - 11;
@@ -190,7 +200,8 @@ class ModeRSA extends Common {
      * @param string $encrypted
      * @return bool|null
      */
-    public static function publicDecrypt($encrypted = false) {
+    public static function publicDecrypt($encrypted = false)
+    {
         $pubKey = self::getPublicKey();
 
         $partLen = self::getKeyBitDetail($pubKey) / 8;
@@ -214,7 +225,8 @@ class ModeRSA extends Common {
      * @param string $data
      * @return bool|null
      */
-    public static function publicEncrypt($data = false) {
+    public static function publicEncrypt($data = false)
+    {
         $pubKey = self::getPublicKey();
 
         $partLen = self::getKeyBitDetail($pubKey) / 8 - 11;
@@ -243,7 +255,8 @@ class ModeRSA extends Common {
      * @param string $encrypted
      * @return bool|null
      */
-    public static function privDecrypt($encrypted = false) {
+    public static function privDecrypt($encrypted = false)
+    {
         $privKey = self::getPrivateKey();
 
         $partLen = self::getKeyBitDetail($privKey) / 8;
@@ -267,7 +280,8 @@ class ModeRSA extends Common {
      * @param array $data
      * @return null|string
      */
-    public static function privSign($data = array()) {
+    public static function privSign($data = array())
+    {
         $privKey = self::getPrivateKey();
 
         openssl_sign(self::createLinkStringNew($data), $sign, $privKey, self::RSA_ALGORITHM_SIGN);
@@ -283,7 +297,8 @@ class ModeRSA extends Common {
      * @param string $sign
      * @return int
      */
-    public static function publicVerifySign($data = array(), $sign = false) {
+    public static function publicVerifySign($data = array(), $sign = false)
+    {
         $pubKey = self::getPublicKey();
 
         $res = openssl_verify(self::createLinkStringNew($data), self::url_safe_base64_decode($sign), $pubKey, self::RSA_ALGORITHM_SIGN);
@@ -299,7 +314,8 @@ class ModeRSA extends Common {
      * @param string $sign
      * @return int
      */
-    public static function publicVerifySignThird($data = array(), $sign = false) {
+    public static function publicVerifySignThird($data = array(), $sign = false)
+    {
         $pubKey = self::getPublicKeyThird();
 
         $res = openssl_verify(self::createLinkStringNew($data), self::url_safe_base64_decode($sign), $pubKey, self::RSA_ALGORITHM_SIGN);
@@ -314,7 +330,8 @@ class ModeRSA extends Common {
      * @param $data
      * @return string
      */
-    private static function url_safe_base64_encode($data) {
+    private static function url_safe_base64_encode($data)
+    {
         return str_replace(array('+', '/', '='), array('-', '_', '~'), base64_encode($data));
     }
 
@@ -322,15 +339,16 @@ class ModeRSA extends Common {
      * @param $data
      * @return string
      */
-    private static function url_safe_base64_decode($data) {
+    private static function url_safe_base64_decode($data)
+    {
         $base_64 = str_replace(array('-', '_', '~'), array('+', '/', '='), $data);
         return base64_decode($base_64);
     }
 
-    public function __destruct(){
+    public function __destruct()
+    {
         self::$publicKey = null;
         self::$privateKey = null;
         self::$thirdPublicKey = null;
     }
-
 }

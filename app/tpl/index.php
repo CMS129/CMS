@@ -52,7 +52,7 @@
                         <a class="smooth-menu nav-link" href="#home">首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="smooth-menu nav-link" href="#features">特色</a>
+                        <a class="smooth-menu nav-link" href="#features">功能</a>
                     </li>
                     <li class="nav-item">
                         <a class="smooth-menu nav-link" href="#viewdemos">演示</a>
@@ -229,8 +229,8 @@
     <div class="container">
         <div class="container-xs">
             <div class="section-heading text-center" data-aos="fade-up">
-                <h2>寻找定制设计？</h2>
-                <p>我们很高兴根据您的需求定制您的产品，给我们发短信！！！</p>
+                <h2>想要定制设计吗?</h2>
+                <p>我们很乐意根据您的需求定制您的产品，请给我们留言!!</p>
             </div>
             <div class="subscribe" data-aos="fade-up">
                 <form id="contact-form" method="post" novalidate="true">

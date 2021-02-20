@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('admin/_header.php')}
+{include('user/_header.php')}
 
 </head>
 <body>
@@ -22,7 +22,7 @@
 				<div class="login-right">
 
 				    <div class="login-right-wrap">
-					    <h1>找回密码 ?</h1>
+					    <h1>用户找回密码 ?</h1>
 					    <p class="account-subtitle">输入您的电子邮件以获取密码重置链接</p>
 						<form action="{$site_url}/forgot-password" method="post">
 							<div class="form-group">
@@ -45,7 +45,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('admin/_footer.php')}
+{include('user/_footer.php')}
 
 <script>
 $(function() {

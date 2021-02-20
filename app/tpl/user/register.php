@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('admin/_header.php')}
+{include('user/_header.php')}
 
 </head>
 <body>
@@ -32,7 +32,7 @@
 
 							<div class="form-group">
 								<label class="form-control-label">邮箱</label>
-								<input type="text" class="form-control" name="loginmail" value="" tabindex="2" autocomplete="off" _input="true" placeholder="可用于找回密码" required>
+								<input type="text" class="form-control" name="loginmail" value="" tabindex="2" autocomplete="off" _input="true" placeholder="可用于用户找回密码" required>
 							</div>
 
 							<div class="form-group">
@@ -59,7 +59,7 @@
 								<span>直接登录</span>
 								<a href="{$site_url}/login-weixin" class="wechat"><i class="fa fa-wechat" aria-hidden="true"></i></a><a href="{$site_url}/login-github" class="github"><i class="fa fa-github" aria-hidden="true"></i></a>
 							</div>
-							<div class="text-center dont-have">已经有账户了？ <a href="{$site_url}/login">立即登陆</a></div>
+							<div class="text-center dont-have">已经有帐户了？ <a href="{$site_url}/login">立即登陆</a></div>
 						</form>
 					</div>
 
@@ -70,7 +70,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('admin/_footer.php')}
+{include('user/_footer.php')}
 
 <script>
 $(function() {

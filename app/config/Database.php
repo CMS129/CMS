@@ -5,7 +5,9 @@ return array(
     # 网站名称
     'title' => '地球村',
     # 法务邮箱
-    'email' => 'support@129.co',
+    'support' => 'support@129.co',
+    # 市场邮箱
+    'sales' => 'sales@129.co',
     # TOKEN 有效时长 秒
     'token' => '120',
     # 登陆锁屏时间 秒

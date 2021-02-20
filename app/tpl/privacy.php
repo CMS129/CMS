@@ -10,7 +10,7 @@
 <title>{$seo_title}-{$title}</title>
 <meta name="keywords" content="{$title}">
 <meta name="description" content="{$title}">
-{include('admin/_header.php')}
+{include('user/_header.php')}
 
 <style>
 .terms {width: 90%; margin: 0 auto; padding: 55px 0;}
@@ -31,10 +31,10 @@
         <!-- Logo -->
 		<div class="header-left">
 			<a href="{$site_url}" class="logo">
-				<img src="{$site_url}/assets/img/logo.png" alt="Logo">
+				<img src="{$site_url}/assets/img/logo.png" alt="{$title}">
 			</a>
 			<a href="/privacy" class="logo logo-small">
-				<img src="{$site_url}/assets/img/logo-small.png" alt="Logo" width="30" height="30">
+				<img src="{$site_url}/assets/img/logo-small.png" alt="{$title}" width="30" height="30">
 			</a>
 		</div>
 		<!-- /Logo -->
@@ -191,7 +191,7 @@
     </div>
 </div>
 
-{include('admin/_footer.php')}
+{include('user/_footer.php')}
 
 </body>
 </html>

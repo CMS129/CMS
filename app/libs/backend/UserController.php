@@ -8,18 +8,18 @@ class UserController extends BaseController
 {
 
     /**
-     * 会员首页
+     * 帐号首页
      */
-    public static function index()
+    public static function settings()
     {
         parent::__checkManagePrivate();
 
-        $CMSCO = ['user' => unserialize(Api::session()->getSession('user'))['user'], 'title' => '管理后台-' . Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL()];
-        Api::render('admin/index', $CMSCO);
+        $CMSCO = ['user' => unserialize(Api::session()->getSession('user'))['user'], 'title' => '帐号设置-' . Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL()];
+        Api::render('user/settings', $CMSCO);
     }
 
     /**
-     * 会员登陆
+     * 帐号登陆
      */
     public static function login()
     {
@@ -68,7 +68,7 @@ class UserController extends BaseController
 
                     Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
 
-                    Api::redirect('/admin-index', 302);
+                    Api::redirect('/user-index', 302);
                 } else {
                     Api::redirect('/login', 302);
                 }
@@ -77,11 +77,11 @@ class UserController extends BaseController
             }
         }
 
-        Api::render('admin/login', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'title' => '会员登录-' . Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL()));
+        Api::render('user/login', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'title' => '帐号登录-' . Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL()));
     }
 
     /**
-     * 会员注销
+     * 帐号退出登录
      */
     public static function logout()
     {
@@ -98,7 +98,7 @@ class UserController extends BaseController
         Api::redirect('/', 302);
     }
 
-    // 会员注册
+    // 帐号注册
     public static function register()
     {
         if (Api::request()->method === 'GET') {
@@ -137,7 +137,7 @@ class UserController extends BaseController
                     Api::redirect('/register', 302);
                 } else {
                     $inLook = mt_rand(100000, 900000);
-                    $option = array('user_name' => trim($inUser), 'user_pwd' => md5($inPwd), 'user_md5' => md5($inUser), 'user_lock' => md5($inLook), 'user_session' => md5('000000'), 'admin_ok' => '1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0', 'user_email' => trim($inEmail), 'user_del' => 0, 'user_ip' => trim($inIP), 'user_logintime' => time());
+                    $option = array('user_name' => trim($inUser), 'user_pwd' => md5($inPwd), 'user_md5' => md5($inUser), 'user_lock' => md5($inLook), 'user_session' => md5('000000'), 'user_ok' => '1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0', 'user_email' => trim($inEmail), 'user_del' => 0, 'user_ip' => trim($inIP), 'user_logintime' => time());
 
                     Api::coms()->getDB()->insert('user', $option);
                     Api::coms()->getSMTP($inEmail, $inUser, '[' . Api::coms()->getTitle() . '] 注册成功说明', Api::coms()->getRegisterMB($inUser, $inEmail, $inLook));
@@ -148,16 +148,16 @@ class UserController extends BaseController
                 Api::redirect('/register', 302);
             }
         }
-        Api::render('admin/register', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '会员注册-' . Api::coms()->getTitle()));
+        Api::render('user/register', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '帐号注册-' . Api::coms()->getTitle()));
     }
 
-    // 会员激活
+    // 帐号激活
     public static function active()
     {
         parent::__checkManagePrivate();
 
         if (unserialize(Api::session()->getSession('user'))['sess'] === md5(Api::request()->cookies[Api::coms()->getSessionName()])) {
-            Api::redirect('/admin-index', 302);
+            Api::redirect('/user-index', 302);
         }
 
         if (Api::request()->method === 'GET') {
@@ -202,10 +202,10 @@ class UserController extends BaseController
                 Api::redirect('/register', 302);
             }
         }
-        Api::render('admin/active', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '会员激活-' . Api::coms()->getTitle()));
+        Api::render('user/active', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '帐号激活-' . Api::coms()->getTitle()));
     }
 
-    // 会员找回密码
+    // 用户找回密码
     public static function forgot_password()
     {
         if (Api::request()->method === 'GET') {
@@ -220,7 +220,7 @@ class UserController extends BaseController
                     Api::redirect('/forgot-password', 302);
                 }
 
-                Api::render('admin/reset-password', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'toKCode' => $toKCode, 'inEmail' => $inEmail, 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '重置密码-' . Api::coms()->getTitle()));
+                Api::render('user/reset-password', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'toKCode' => $toKCode, 'inEmail' => $inEmail, 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '重置密码-' . Api::coms()->getTitle()));
                 exit();
             }
         }
@@ -270,7 +270,7 @@ class UserController extends BaseController
                     }
                 }
 
-                // 找回密码
+                // 用户找回密码
                 $inEmail = trim(Api::coms()->getRSA('rd', Api::request()->data['loginmail']));
                 if (md5(substr($inEmail, -32)) != md5($toke['token'])) {
                     Api::redirect('/forgot-password', 302);
@@ -297,10 +297,10 @@ class UserController extends BaseController
                 Api::redirect('/forgot-password', 302);
             }
         }
-        Api::render('admin/forgot-password', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '找回密码-' . Api::coms()->getTitle()));
+        Api::render('user/forgot-password', array('pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '用户找回密码-' . Api::coms()->getTitle()));
     }
 
-    // 会员解锁
+    // 帐号解锁
     public static function lock()
     {
         parent::__checkManagePrivate();
@@ -313,7 +313,7 @@ class UserController extends BaseController
             $toke = unserialize(Api::session()->getSession('token'));
 
             if (Api::coms()->getMsectime() > $toke['time']) {
-                Api::redirect('/admin-lock', 302);
+                Api::redirect('/user-lock', 302);
             }
 
             if (isset(Api::request()->data['__hash__']) && (md5($toke['token']) === md5(Api::request()->data['__hash__'])) && ($toke['get'] === Api::coms()->getTokenID('GET')) && ($toke['post'] === Api::coms()->getTokenID('POST'))) {
@@ -326,17 +326,17 @@ class UserController extends BaseController
 
                 $loginpwd = trim(Api::coms()->getRSA('rd', Api::request()->data['nloginpwd']));
                 if (md5(trim(substr($loginpwd, -32))) != md5($toke['token'])) {
-                    Api::redirect('/admin-lock', 302);
+                    Api::redirect('/user-lock', 302);
                 }
 
                 $loginpwd = Api::coms()->getSrt('passwd', trim(substr($loginpwd, 0, -32)));
                 if (empty($loginpwd)) {
-                    Api::redirect('/admin-lock', 302);
+                    Api::redirect('/user-lock', 302);
                 }
 
                 if (unserialize(Api::session()->getSession('user'))['lock'] === md5($loginpwd)) {
                     Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
-                    Api::redirect('/admin-index', 302);
+                    Api::redirect('/user-index', 302);
                 } else {
                     header("Cache-control:no-cache,no-store,must-revalidate");
                     header("Pragma:no-cache");
@@ -346,10 +346,10 @@ class UserController extends BaseController
                     Api::redirect('/login', 302);
                 }
             } else {
-                Api::redirect('/admin-lock', 302);
+                Api::redirect('/user-lock', 302);
             }
         }
-        Api::render('admin/lock', array('uname' => trim(unserialize(Api::session()->getSession('user'))['user']), 'pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '会员解锁-' . Api::coms()->getTitle()));
+        Api::render('user/lock', array('uname' => trim(unserialize(Api::session()->getSession('user'))['user']), 'pubKey' => base64_encode(Api::coms()->getKey('public')), 'token' => $token, 'site_url' => Api::coms()->getSiteURL(), 'title' => '帐号解锁-' . Api::coms()->getTitle()));
     }
 
     public static function error()

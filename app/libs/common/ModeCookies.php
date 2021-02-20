@@ -2,7 +2,8 @@
 
 namespace app\libs\common;
 
-class ModeCookies extends Common {
+class ModeCookies extends Common
+{
 
     private $_securekey;
 
@@ -10,8 +11,9 @@ class ModeCookies extends Common {
      * 防止克隆
      * @var string
      */
-    private function __clone() {
-        $this->_securekey= null;
+    private function __clone()
+    {
+        $this->_securekey = null;
     }
 
     /** 设置cookie 
@@ -19,7 +21,8 @@ class ModeCookies extends Common {
      * @param mixed $value cookie value 可以是字符串,数组,对象等 
      * @param int  $expire 过期时间 
      */
-    public function setCookie($name, $value, $expire = 0) {
+    public function setCookie($name, $value, $expire = 0)
+    {
 
         $cookie_name = $this->getName($name);
         $cookie_expire = time() + ($expire ? $expire : $this->getCookieTime());
@@ -28,13 +31,13 @@ class ModeCookies extends Common {
 
         if ($cookie_name && $cookie_value && $cookie_expire) {
             if (PHP_VERSION_ID < 70300) {
-                setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE), TRUE);
+                setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE), TRUE);
             } else {
                 setcookie($cookie_name, $cookie_value, [
                     'expires' => $cookie_expire,
                     'path' => '/',
                     'domain' => $this->getDomain(),
-                    'secure' => ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE),
+                    'secure' => ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE),
                     'httponly' => true,
                     'samesite' => 'lax'
                 ]);
@@ -46,7 +49,8 @@ class ModeCookies extends Common {
      * @param String $name  cookie name 
      * @return mixed cookie value 
      */
-    public function getCookie($name) {
+    public function getCookie($name)
+    {
 
         $cookie_name = $this->getName($name);
 
@@ -65,19 +69,20 @@ class ModeCookies extends Common {
      * @param String $name  cookie name 
      * @return mixed cookie value 
      */
-    public function setDoCookie($name, $value, $expire = 0) {
+    public function setDoCookie($name, $value, $expire = 0)
+    {
 
         $cookie_expire = time() + ($expire ? $expire : $this->getCookieTime());
 
         if ($name && $value && $cookie_expire) {
             if (PHP_VERSION_ID < 70300) {
-                setcookie($name, $value, $cookie_expire, '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE), TRUE);
+                setcookie($name, $value, $cookie_expire, '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE), TRUE);
             } else {
                 setcookie($name, $value, [
                     'expires' => $cookie_expire,
                     'path' => '/',
                     'domain' => $this->getDomain(),
-                    'secure' => ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE),
+                    'secure' => ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE),
                     'httponly' => true,
                     'samesite' => 'lax'
                 ]);
@@ -89,7 +94,8 @@ class ModeCookies extends Common {
      * @param String $name  cookie name 
      * @return mixed cookie value 
      */
-    public function getDoCookie($name) {
+    public function getDoCookie($name)
+    {
 
         if (isset($_COOKIE[$name])) {
 
@@ -104,7 +110,8 @@ class ModeCookies extends Common {
      * @param mixed $value cookie value 
      * @return boolean 
      */
-    public function upCookie($name, $value) {
+    public function upCookie($name, $value)
+    {
 
         $cookie_name = $this->getName($name);
 
@@ -123,13 +130,13 @@ class ModeCookies extends Common {
 
                 if ($cookie_name && $cookie_value && $cookie_expire) {
                     if (PHP_VERSION_ID < 70300) {
-                        setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE), TRUE);
+                        setcookie($cookie_name, $cookie_value, $cookie_expire, '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE), TRUE);
                     } else {
                         setcookie($cookie_name, $cookie_value, [
                             'expires' => $cookie_expire,
                             'path' => '/',
                             'domain' => $this->getDomain(),
-                            'secure' => ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE),
+                            'secure' => ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE),
                             'httponly' => true,
                             'samesite' => 'lax'
                         ]);
@@ -144,17 +151,18 @@ class ModeCookies extends Common {
     /** 清除cookie 
      * @param String $name  cookie name 
      */
-    public function delCookie($name) {
+    public function delCookie($name)
+    {
 
         $cookie_name = $this->getName($name);
         if (PHP_VERSION_ID < 70300) {
-            setcookie($cookie_name, "", time() - $this->getCookieTime(), '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE), TRUE);
+            setcookie($cookie_name, "", time() - $this->getCookieTime(), '/; samesite=lax', $this->getDomain(), ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE), TRUE);
         } else {
             setcookie($cookie_name, "", [
                 'expires' => time() - $this->getCookieTime(),
                 'path' => '/',
                 'domain' => $this->getDomain(),
-                'secure' => ((strtolower($this->request()->scheme)=='http')?FALSE:TRUE),
+                'secure' => ((strtolower($this->request()->scheme) == 'http') ? FALSE : TRUE),
                 'httponly' => true,
                 'samesite' => 'lax'
             ]);
@@ -165,7 +173,8 @@ class ModeCookies extends Common {
      * @param String $name 
      * @return String 
      */
-    private function getName($name) {
+    private function getName($name)
+    {
         return $this->getCookiesName() ? $this->getCookiesName() . '_' . $name : $name;
     }
 
@@ -174,7 +183,8 @@ class ModeCookies extends Common {
      * @param int  $expire  过期时间 用于判断
      * @return 
      */
-    private function packCookie($data, $expire) {
+    private function packCookie($data, $expire)
+    {
 
         if ($data === '') {
             return '';
@@ -190,7 +200,8 @@ class ModeCookies extends Common {
      * @param Mixed $data 数据 
      * @return       array(数据,过期时间) 
      */
-    private function unpackCookie($data) {
+    private function unpackCookie($data)
+    {
 
         if ($data === '') {
             return array('', 0);
@@ -212,11 +223,12 @@ class ModeCookies extends Common {
      * @param String $operation ENCODE or DECODE 
      * @return String      根据设置返回明文活密文 
      */
-    private function authcodeCookie($string, $operation = 'DECODE') {
+    private function authcodeCookie($string, $operation = 'DECODE')
+    {
 
         $this->_securekey = md5($this->getKey('token'));
         $key_length = strlen($this->_securekey);
-        $string = (($operation === 'DECODE') ? base64_decode(str_replace(array('-', '_', '~'), array('+', '/', '='),$string)) : substr(md5($string . $this->_securekey), 0, 32) . $string);
+        $string = (($operation === 'DECODE') ? base64_decode(str_replace(array('-', '_', '~'), array('+', '/', '='), $string)) : substr(md5($string . $this->_securekey), 0, 32) . $string);
         $string_length = strlen($string);
         $rndkey = $box = array();
         $result = '';
@@ -248,5 +260,4 @@ class ModeCookies extends Common {
             return str_replace(array('+', '/', '='), array('-', '_', '~'), base64_encode($result));
         }
     }
-
 }

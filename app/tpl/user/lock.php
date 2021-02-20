@@ -8,7 +8,7 @@
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <title>{$title}</title>
-{include('admin/_header.php')}
+{include('user/_header.php')}
 
 </head>
 <body>
@@ -27,7 +27,7 @@
 						</div>
 
 						<!-- Form -->
-						<form action="{$site_url}/admin-lock" method="post">
+						<form action="{$site_url}/user-lock" method="post">
 							<div class="form-group">
 								<label class="form-control-label">解锁密码</label>
 								<input type="password" class="form-control pass-input" name="nloginpwd" id="nloginpwd" value="" autocomplete="off" _input="true" tabindex="1" placeholder="请填写解锁密码" required>
@@ -49,7 +49,7 @@
 </div>
 <!-- /Main Wrapper -->
 
-{include('admin/_footer.php')}
+{include('user/_footer.php')}
 
 <script>
 $(function() {

@@ -2,7 +2,8 @@
 
 namespace app\libs\common;
 
-class MySQLPDO extends Common {
+class MySQLPDO extends Common
+{
 
     /**
      * 静态属性,所有数据库实例共用,避免重复连接数据库
@@ -58,7 +59,8 @@ class MySQLPDO extends Common {
      * 初始化类
      * @param array $conf 数据库配置
      */
-    public function __construct($dbhost = null, $dbuser = null, $dbpass = null, $dbname = null, $dbcharset = null, $dbport = null, $dbprefix = null) {
+    public function __construct($dbhost = null, $dbuser = null, $dbpass = null, $dbname = null, $dbcharset = null, $dbport = null, $dbprefix = null)
+    {
         class_exists('PDO') or die('PDO: class not exists.');
         $this->_host = trim($dbhost);
         $this->_port = trim($dbport);
@@ -76,7 +78,8 @@ class MySQLPDO extends Common {
     /**
      * 连接数据库的方法
      */
-    private function _connect() {
+    private function _connect()
+    {
         $dsn = 'mysql:host=' . $this->_host . ';port=' . $this->_port . ';dbname=' . $this->_dbName;
         //持久化连接
         $options = $this->_pconnect ? array(\PDO::ATTR_PERSISTENT => true) : array();
@@ -84,11 +87,10 @@ class MySQLPDO extends Common {
             $dbh = new \PDO($dsn, $this->_user, $this->_pass, $options);
             $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION); // 设置如果sql语句执行错误则抛出异常，事务会自动回滚
             $dbh->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false); // 禁用prepared statements的仿真效果(防SQL注入)
-        }
-        catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             die('Connection failed: ' . $e->getMessage());
         }
-        $dbh->exec('SET NAMES '.$this->_charset);
+        $dbh->exec('SET NAMES ' . $this->_charset);
         self::$_dbh = $dbh;
         $dsn = $this->_user = $this->_pass = $this->_charset = null;
     }
@@ -96,7 +98,8 @@ class MySQLPDO extends Common {
     /**
      * 防止克隆
      */
-    private function __clone() {
+    private function __clone()
+    {
         $this->_host = null;
         $this->_port = null;
         $this->_user = null;
@@ -113,7 +116,8 @@ class MySQLPDO extends Common {
      * @param string $value
      * @return string
      */
-    private function _addChar($value) {
+    private function _addChar($value)
+    {
         if ('*' == $value || false !== strpos($value, '(') || false !== strpos($value, '.') || false !== strpos($value, '`')) {
             //如果包含* 或者 使用了sql方法 则不作处理
         } elseif (false === strpos($value, '`')) {
@@ -127,7 +131,8 @@ class MySQLPDO extends Common {
      * @param string $tbName 表名
      * @return array
      */
-    private function _tbFields($tbName) {
+    private function _tbFields($tbName)
+    {
         $sql = 'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME="' . $tbName . '" AND TABLE_SCHEMA="' . $this->_dbName . '"';
         $stmt = self::$_dbh->prepare($sql);
         $stmt->execute();
@@ -146,15 +151,20 @@ class MySQLPDO extends Common {
      * @param array $data POST提交数据
      * @return array $newdata
      */
-    private function _dataFormat($tbName, $data) {
-        if (!is_array($data)) { return array(); }
+    private function _dataFormat($tbName, $data)
+    {
+        if (!is_array($data)) {
+            return array();
+        }
         $table_column = $this->_tbFields($tbName);
         $ret = array();
         foreach ($data as $key => $val) {
-            if(is_array($val) && !empty($val[1])) {
-                $ret = array_merge($ret, $this->_dataFormat(trim($this->_prefix).$val[0], $val[1]));
+            if (is_array($val) && !empty($val[1])) {
+                $ret = array_merge($ret, $this->_dataFormat(trim($this->_prefix) . $val[0], $val[1]));
             } else {
-                if (!is_scalar($val)) { continue; } //值不是标量则跳过
+                if (!is_scalar($val)) {
+                    continue;
+                } //值不是标量则跳过
                 if (array_key_exists($key, $table_column)) {
                     $key = $this->_addChar($key);
                     if (is_int($val)) {
@@ -180,7 +190,8 @@ class MySQLPDO extends Common {
      * @param string $sql sql指令
      * @return mixed
      */
-    private function _doQuery($sql = '') {
+    private function _doQuery($sql = '')
+    {
         $this->_sql = $sql;
         $pdostmt = self::$_dbh->prepare($this->_sql); //prepare或者query 返回一个PDOStatement
         $pdostmt->execute();
@@ -194,7 +205,8 @@ class MySQLPDO extends Common {
      * @param string $sql sql指令
      * @return integer
      */
-    private function _doExec($sql = '') {
+    private function _doExec($sql = '')
+    {
         $this->_sql = $sql;
         return self::$_dbh->exec($this->_sql);
     }
@@ -204,7 +216,8 @@ class MySQLPDO extends Common {
      * @param string $sql SQL指令
      * @return mixed
      */
-    public function doSql($sql = '') {
+    public function doSql($sql = '')
+    {
         $queryIps = 'INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|LOAD DATA|SELECT .* INTO|COPY|ALTER|GRANT|REVOKE|LOCK|UNLOCK';
         if (preg_match('/^\s*"?(' . $queryIps . ')\s+/i', $sql)) {
             return $this->_doExec($sql);
@@ -218,7 +231,8 @@ class MySQLPDO extends Common {
      * 获取最近一次查询的sql语句
      * @return String 执行的SQL
      */
-    public function getLastSql() {
+    public function getLastSql()
+    {
         return $this->_sql;
     }
 
@@ -228,10 +242,13 @@ class MySQLPDO extends Common {
      * @param array $data 字段-值的一维数组
      * @return int 受影响的行数
      */
-    public function insert($tbName, array $data) {
-        $data = $this->_dataFormat(trim($this->_prefix).trim($tbName), $data);
-        if (!$data) { return; }
-        $sql = 'INSERT INTO ' . trim($this->_prefix).trim($tbName) . '(' . implode(',', array_keys($data)) . ') VALUES(' . implode(',', array_values($data)) . ')';
+    public function insert($tbName, array $data)
+    {
+        $data = $this->_dataFormat(trim($this->_prefix) . trim($tbName), $data);
+        if (!$data) {
+            return;
+        }
+        $sql = 'INSERT INTO ' . trim($this->_prefix) . trim($tbName) . '(' . implode(',', array_keys($data)) . ') VALUES(' . implode(',', array_values($data)) . ')';
         return $this->_doExec($sql);
     }
 
@@ -240,10 +257,13 @@ class MySQLPDO extends Common {
      * @param string $tbName 操作的数据表名
      * @return int 受影响的行数
      */
-    public function delete($tbName) {
+    public function delete($tbName)
+    {
         //安全考虑,阻止全表删除
-        if (!trim($this->_where)) { return false; }
-        $sql = 'DELETE ' . trim($this->_field) . ' FROM ' . trim($this->_prefix).trim($tbName) .' AS '. trim($tbName) . ' ' . trim($this->_join) . ' ' . $this->_where;
+        if (!trim($this->_where)) {
+            return false;
+        }
+        $sql = 'DELETE ' . trim($this->_field) . ' FROM ' . trim($this->_prefix) . trim($tbName) . ' AS ' . trim($tbName) . ' ' . trim($this->_join) . ' ' . $this->_where;
         $this->_clear = 1;
         $this->_clear();
         return $this->_doExec($sql);
@@ -255,17 +275,22 @@ class MySQLPDO extends Common {
      * @param array $data 参数数组
      * @return int 受影响的行数
      */
-    public function update($tbName, array $data) {
+    public function update($tbName, array $data)
+    {
         //安全考虑,阻止全表更新
-        if (!trim($this->_where)) { return false; }
-        $data = $this->_dataFormat(trim($this->_prefix).trim($tbName), $data);
-        if (!$data) { return; }
+        if (!trim($this->_where)) {
+            return false;
+        }
+        $data = $this->_dataFormat(trim($this->_prefix) . trim($tbName), $data);
+        if (!$data) {
+            return;
+        }
         $valArr = array();
         foreach ($data as $k => $v) {
             $valArr[] = $k . '=' . $v;
         }
         $valStr = implode(',', $valArr);
-        $sql = 'UPDATE ' . trim($this->_prefix).trim($tbName) .' AS '. trim($tbName) . ' ' . trim($this->_join) . ' SET ' . trim($valStr) . ' ' . trim($this->_where);
+        $sql = 'UPDATE ' . trim($this->_prefix) . trim($tbName) . ' AS ' . trim($tbName) . ' ' . trim($this->_join) . ' SET ' . trim($valStr) . ' ' . trim($this->_where);
         return $this->_doExec($sql);
     }
 
@@ -274,8 +299,9 @@ class MySQLPDO extends Common {
      * @param string $tbName 操作的数据表名
      * @return array 结果集
      */
-    public function select($tbName = '') {
-        $sql = 'SELECT ' . trim($this->_field) . ' FROM ' . trim($this->_prefix).trim($tbName) .' AS '. trim($tbName) . ' ' . trim($this->_join) . ' ' . trim($this->_where) . ' ' . trim($this->_order) . ' ' . trim($this->_limit);
+    public function select($tbName = '')
+    {
+        $sql = 'SELECT ' . trim($this->_field) . ' FROM ' . trim($this->_prefix) . trim($tbName) . ' AS ' . trim($tbName) . ' ' . trim($this->_join) . ' ' . trim($this->_where) . ' ' . trim($this->_order) . ' ' . trim($this->_limit);
         $this->_clear = 1;
         $this->_clear();
         return $this->_doQuery(trim($sql));
@@ -289,39 +315,40 @@ class MySQLPDO extends Common {
      * @param  mixed $option 关联的表名的二维数组 例：$option = array('type', 'table', array('a', '=', 'b'));
      * @return $this
      */
-    public function join($option) {
+    public function join($option)
+    {
         if ($this->_clear > 0) {
             $this->_clear();
         }
         $this->_join = '';
         $conditionis = '';
         if (!empty($option) && is_array($option)) {
-            if(is_array($option[0])) {
+            if (is_array($option[0])) {
                 foreach ($option as $k => $v) {
                     if (is_array($v[2][0])) {
                         foreach ($v[2] as $l => $i) {
                             $condition = $i[0] . $i[1] . $i[2];
                             $logic = ' AND ';
-                            $conditionis.= isset($mark) ? $logic . $condition : $condition;
+                            $conditionis .= isset($mark) ? $logic . $condition : $condition;
                             $mark = 1;
                         }
                     } else {
                         $conditionis = $v[2][0] . $v[2][1] . $v[2][2];
                     }
-                    $this->_join .= ' ' . strtoupper($v[0]) . ' JOIN ' . trim($this->_prefix).trim($v[1]) .' AS '.trim($v[1]) . ' ON ' . $conditionis . ' ';
+                    $this->_join .= ' ' . strtoupper($v[0]) . ' JOIN ' . trim($this->_prefix) . trim($v[1]) . ' AS ' . trim($v[1]) . ' ON ' . $conditionis . ' ';
                 }
             } else {
                 if (is_array($option[2][0])) {
                     foreach ($option[2] as $k => $v) {
                         $condition = $v[0] . $v[1] . $v[2];
                         $logic = ' AND ';
-                        $conditionis.= isset($mark) ? $logic . $condition : $condition;
+                        $conditionis .= isset($mark) ? $logic . $condition : $condition;
                         $mark = 1;
                     }
                 } else {
                     $conditionis = $option[2][0] . $option[2][1] . $option[2][2];
                 }
-                $this->_join .= ' ' . strtoupper($option[0]) . ' JOIN ' . trim($this->_prefix).trim($option[1]) .' AS '.trim($option[1]) . ' ON ' . $conditionis . ' ';
+                $this->_join .= ' ' . strtoupper($option[0]) . ' JOIN ' . trim($this->_prefix) . trim($option[1]) . ' AS ' . trim($option[1]) . ' ON ' . $conditionis . ' ';
             }
         }
         return $this;
@@ -331,14 +358,15 @@ class MySQLPDO extends Common {
      * @param mixed $option 组合条件的二维数组，例：$option['field1'] = array(1,'=>','or')
      * @return $this
      */
-    public function where($option) {
+    public function where($option)
+    {
         if ($this->_clear > 0) {
             $this->_clear();
         }
         $this->_where = ' WHERE ';
         $logic = 'AND';
         if (is_string($option)) {
-            $this->_where.= $option;
+            $this->_where .= $option;
         } elseif (is_array($option)) {
             foreach ($option as $k => $v) {
                 if (is_array($v)) {
@@ -349,7 +377,7 @@ class MySQLPDO extends Common {
                     $logic = 'AND';
                     $condition = ' (' . $this->_addChar($k) . '=\'' . $v . '\') ';
                 }
-                $this->_where.= isset($mark) ? $logic . $condition : $condition;
+                $this->_where .= isset($mark) ? $logic . $condition : $condition;
                 $mark = 1;
             }
         }
@@ -361,17 +389,18 @@ class MySQLPDO extends Common {
      * @param mixed $option 排序条件数组 例:array('sort'=>'desc')
      * @return $this
      */
-    public function order($option) {
+    public function order($option)
+    {
         if ($this->_clear > 0) {
             $this->_clear();
         }
         $this->_order = ' ORDER BY ';
         if (is_string($option)) {
-            $this->_order.= $option;
+            $this->_order .= $option;
         } elseif (is_array($option)) {
             foreach ($option as $k => $v) {
                 $order = $this->_addChar($k) . ' ' . $v;
-                $this->_order.= isset($mark) ? ',' . $order : $order;
+                $this->_order .= isset($mark) ? ',' . $order : $order;
                 $mark = 1;
             }
         }
@@ -384,7 +413,8 @@ class MySQLPDO extends Common {
      * @param int $pageSize 为空则函数设定取出行数，不为空则设定取出行数及页数
      * @return $this
      */
-    public function limit($page, $pageSize = null) {
+    public function limit($page, $pageSize = null)
+    {
         if ($this->_clear > 0) {
             $this->_clear();
         }
@@ -402,7 +432,8 @@ class MySQLPDO extends Common {
      * @param mixed $field 字段数组
      * @return $this
      */
-    public function field($field) {
+    public function field($field)
+    {
         if ($this->_clear > 0) {
             $this->_clear();
         }
@@ -417,7 +448,8 @@ class MySQLPDO extends Common {
     /**
      * 清理标记函数
      */
-    private function _clear() {
+    private function _clear()
+    {
         $this->_where = '';
         $this->_join = '';
         $this->_order = '';
@@ -430,7 +462,8 @@ class MySQLPDO extends Common {
      * 手动清理标记
      * @return $this
      */
-    public function clearKey() {
+    public function clearKey()
+    {
         $this->_clear();
         return $this;
     }
@@ -439,7 +472,8 @@ class MySQLPDO extends Common {
      * 启动事务
      * @return void
      */
-    public function startTrans() {
+    public function startTrans()
+    {
         //数据rollback 支持
         if ($this->_trans == 0) {
             self::$_dbh->beginTransaction();
@@ -452,7 +486,8 @@ class MySQLPDO extends Common {
      * 用于非自动提交状态下面的查询提交
      * @return boolen
      */
-    public function commit() {
+    public function commit()
+    {
         $result = true;
         if ($this->_trans > 0) {
             $result = self::$_dbh->commit();
@@ -465,7 +500,8 @@ class MySQLPDO extends Common {
      * 事务回滚
      * @return boolen
      */
-    public function rollback() {
+    public function rollback()
+    {
         $result = true;
         if ($this->_trans > 0) {
             $result = self::$_dbh->rollback();
@@ -478,12 +514,15 @@ class MySQLPDO extends Common {
      * 关闭连接
      * PHP 在脚本结束时会自动关闭连接
      */
-    public function close() {
-        if (!is_null(self::$_dbh)) { self::$_dbh = null; }
+    public function close()
+    {
+        if (!is_null(self::$_dbh)) {
+            self::$_dbh = null;
+        }
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->close();
     }
-
 }
