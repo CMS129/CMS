@@ -18,9 +18,11 @@ class BaseController
                 Api::redirect('/active', 302);
             }
 
-            if ((Api::request()->url != '/admin-lock') && ((Api::cookies()->getCookie('lock')['time'] + ceil(Api::coms()->getLookTime())) < Api::coms()->getMsectime())) {
+            if ((Api::request()->url != '/admin-lock') && ((ceil(Api::cookies()->getCookie('lock')['time']) + ceil(Api::coms()->getLookTime())) < Api::coms()->getMsectime())) {
                 Api::redirect('/admin-lock', 302);
-            } else {
+            }
+
+            if (Api::request()->url != '/admin-lock') {
                 Api::cookies()->setCookie('lock', array('time' => Api::coms()->getMsectime()));
             }
 
