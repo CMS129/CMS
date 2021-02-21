@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
 <meta name="applicable-device" content="pc,mobile">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
-<title>{$title}</title>
-<meta name="keywords" content="{$title}">
-<meta name="description" content="{$title}">
+<title>CMS内容管理系统-{$title}</title>
+<meta name="keywords" content="{$title},CMS内容管理系统">
+<meta name="description" content="基于 PHP + MYSQL + Bootstrap 的CMS内容管理系统，可用于人力资源管理和其他后端办公室管理应用。 系统拥有所有必要的工具模块为您构建一个完整的后端。">
 {include('_header.php')}
 
 </head>
@@ -82,9 +82,9 @@
         <div class="hero-wrap">
             <div class="container-sm" data-aos="fade-up">
                 <div class="content">
-                    <h1>个人数据查询<br> CMS内容管理系统</h1>
+                    <h1>{$title}<br>CMS内容管理系统</h1>
                     <p>
-                        基于 Bootstrap 的CMS内容管理系统，可用于人力资源管理和其他后端办公室管理应用。 系统拥有所有必要的工具模块为您构建一个完整的后端。在iPad、iPhone、平板电脑和其他手机上具有完美响应能力和功能，多个选项，包括视频和语音呼叫等。  
+                        基于 PHP + MYSQL + Bootstrap 的CMS内容管理系统，可用于人力资源管理和其他后端办公室管理应用。 系统拥有所有必要的工具模块为您构建一个完整的后端。在iPad、iPhone、平板电脑和其他手机上具有完美响应能力和功能，多个选项，包括视频和语音呼叫等。  
                     </p>
                     <a class="smooth-menu view-btn" href="#viewdemos">官方演示</a> 
                     <a class="smooth-menu view-btn" href="">下载源码</a>
