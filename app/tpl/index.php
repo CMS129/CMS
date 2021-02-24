@@ -82,7 +82,7 @@
         <div class="hero-wrap">
             <div class="container-sm" data-aos="fade-up">
                 <div class="content">
-                    <h1>{$title}<br>CMS内容管理系统</h1>
+                    <h1>{$title}</h1>
                     <p>
                         基于 PHP + MYSQL + Bootstrap 的CMS内容管理系统，可用于人力资源管理和其他后端办公室管理应用。 系统拥有所有必要的工具模块为您构建一个完整的后端。在iPad、iPhone、平板电脑和其他手机上具有完美响应能力和功能，多个选项，包括视频和语音呼叫等。  
                     </p>
