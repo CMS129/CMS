@@ -3,7 +3,7 @@
 return array(
 # ======> 公共配置
     # 网站名称
-    'title' => '地球村',
+    'title' => 'HRMCMS系统',
     # 法务邮箱
     'support' => 'support@129.co',
     # 市场邮箱
@@ -40,8 +40,8 @@ return array(
     # 数据库编码，默认utf8
     'db.charset' => 'utf8',
 # ======> SMTP 配置
-    'smtp.host' =>'smtp.qiye.aliyun.com',
-    'smtp.user' =>'support@129.co',
+    'smtp.host' =>'smtp.sina.com',
+    'smtp.user' =>'hrmcms@sina.com',
     'smtp.pass' =>'',
     'smtp.port' =>'465',
     # port:465 tlss:ssl
