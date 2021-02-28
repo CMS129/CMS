@@ -1,0 +1,1777 @@
+清屏命令
+$ clear
+
+清空历史命令
+$ echo > .bash_history
+
+#清空当前缓存中的命令
+$ history -c
+
+----------------------------------------------------------------------
+
+iptables -I INPUT -s 124.115.0.199 -j DROP
+是屏蔽124.115.0.199这个IP
+
+iptables -I INPUT -s 124.115.0.0/16 -j DROP
+是屏蔽124.115.*.*这段IP 就是124.115开头的IP
+
+iptables -I INPUT -s 61.37.80.0/24 -j DROP
+是屏蔽61.37.80.*这段IP  意思就是61.37.80开头的IP
+
+iptables -I INPUT -s 124.0.0.0/8 -j DROP
+是屏蔽124.*.*.*这段IP  意思就是124开头的IP
+
+----------------------------------------------------------------------
+
+永久关闭SELinux
+
+vi /etc/selinux/config
+#SELINUX=enforcing     #注释掉
+#SELINUXTYPE=targeted  #注释掉
+SELINUX=disabled  #增加
+:wq  #保存，关闭。
+shutdown -r now   #重启系统
+
+----------------------------------------------------------------------
+
+如果我们打算让服务可以随机启动，那么如下运行：
+systemctl enable httpd.service
+
+用 chkconfig 命令检测一下服务是否运行成功
+chkconfig --list |grep httpd
+httpd              0:off    1:off    2:on    3:on    4:on    5:on    6:off
+可见服务已经在 第2 到 第5 运行等级打开。
+
+同理禁止服务随机启动可以如下运行：
+[root@beyes   command]# systemctl disable httpd.service
+
+用 chkconfig 检测一下：
+[root@beyes   command]# chkconfig --list |grep httpd
+
+httpd              0:off    1:off    2:off    3:off    4:off    5:off    6:off
+
+已经关闭成功。
+
+----------------------------------------------------------------------
+
+统计软件数量
+rpm -qa | wc -l
+
+全部软件名称
+rpm -qa | sort
+
+查看是否还有mysql软件：
+rpm -qa|grep mysql
+有的话继续删除
+
+rpm -e httpd --nodeps
+
+----------------------------------------------------------------------
+
+linux中快速清空文件内容的几种方法
+
+$ : > filename 
+$ > filename 
+$ echo "" > filename 
+$ echo > filename 
+$ cat /dev/null > filename
+
+----------------------------------------------------------------------
+
+文件名查找法：
+find / -name httpd.conf
+find /etc -name '*srm*'
+find /etc -name 'srm*'
+
+----------------------------------------------------------------------
+
+用chattr命令防止系统中某个关键文件被修改：
+chattr +i /home/wwwroot/default/.user.ini
+
+chattr -i /home/wwwroot/default/.user.ini
+
+----------------------------------------------------------------------
+
+Crontab 示例
+
+1、在 凌晨00:01运行
+
+1 0 * * * /home/linrui/XXXX.sh
+
+2、每个工作日23:59都进行备份作业。
+
+59 11 * * 1,2,3,4,5 /home/linrui/XXXX.sh   
+
+或者如下写法：
+
+59 11 * * 1-5 /home/linrui/XXXX.sh
+
+3、每分钟运行一次命令
+
+*/1 * * * * /home/linrui/XXXX.sh
+
+4、每个月的1号 14:10 运行
+
+10 14 1 * * /home/linrui/XXXX.sh
+
+crontab -e : 修改 crontab 文件. 如果文件不存在会自动创建。 
+crontab -l : 显示 crontab 文件。 
+crontab -r : 删除 crontab 文件。
+crontab -ir : 删除 crontab 文件前提醒用户
+
+* * * * * command
+分 时 日 月 周 命令
+
+第1列表示分钟1～59 每分钟用*或者 */1表示
+第2列表示小时1～23（0表示0点）
+第3列表示日期1～31
+第4列表示月份1～12
+第5列标识号星期0～6（0表示星期天）
+第6列要运行的命令
+
+----------------------------------------------------------------------
+
+# screen [-AmRvx -ls -wipe][-d <作业名称>][-h <行数>][-r <作业名称>][-s ][-S <作业名称>]
+
+参数说明
+
+-A 　将所有的视窗都调整为目前终端机的大小。
+-d <作业名称> 　将指定的screen作业离线。
+-h <行数> 　指定视窗的缓冲区行数。
+-m 　即使目前已在作业中的screen作业，仍强制建立新的screen作业。
+-r <作业名称> 　恢复离线的screen作业。
+-R 　先试图恢复离线的作业。若找不到离线的作业，即建立新的screen作业。
+-s 　指定建立新视窗时，所要执行的shell。
+-S <作业名称> 　指定screen作业的名称。
+-v 　显示版本信息。
+-x 　恢复之前离线的screen作业。
+-ls或--list 　显示目前所有的screen作业。
+-wipe 　检查目前所有的screen作业，并删除已经无法使用的screen作业。
+
+screen -S yourname -> 新建一个叫yourname的session
+screen -ls -> 列出当前所有的session
+screen -r yourname -> 回到yourname这个session
+screen -d yourname -> 远程detach某个session
+screen -d -r yourname -> 结束当前session并回到yourname这个session
+
+----------------------------------------------------------------------
+
+更新为香港时区
+timedatectl set-timezone Asia/Shanghai
+
+----------------------------------------------------------------------
+
+修改history命令记录
+cp /etc/profile   /etc/profilebak
+vi /etc/profile
+找到 HISTSIZE=1000 改为 HISTSIZE=50
+
+----------------------------------------------------------------------
+
+禁止空密码登录
+
+vi /etc/ssh/sshd_config
+
+Port 22                                     # ssh端口
+ListenAddress 192.168.0.1       # 对于在服务器上安装了多个网卡或配置多个IP地址的情况，设定sshd只在其中一个指定的接口地址监听
+AllowUsers  *@10.138.*.*         # 仅允许 10.138.0.0/16 网段所有用户通过ssh访问
+AllowUsers  normal                 # 只允许这个用户远程登录
+AllowTcpForwarding no           # 禁止空密码登录
+X11Forwarding no                   # 关闭X11Forwarding，防止会话被劫持
+PermitEmptyPasswords no       # 允许使用空密码
+Protocol 2                                # 禁止使用版本1协议
+MaxStartups 5                         # 增加SSH终端连接数最大为1000个
+LoginGraceTime 20                 # 在20秒内不能完成登录，则断开连接
+UseDNS no                            #关闭DNS查询,是否使用dns反向解析
+MaxAuthTries 3                     #这仅是超过3次验证错误断开连接
+ClientAliveInterval  600         #将ClientAliveInterval 设置为300到900，即5-15分钟
+ClientAliveCountMax  2        #将ClientAliveCountMax设置为0-3之间
+
+systemctl status sshd.service
+systemctl restart sshd.service
+
+sshd_config文件如何立即生效
+/etc/init.d/sshd restart   或者：/etc/rc.d/init.d/sshd restart
+
+----------------------------------------------------------------------
+
+修改密码长度
+
+vi /etc/login.defs
+
+PASS_MIN_LEN 18
+
+----------------------------------------------------------------------
+
+升级centos系统
+yum update #更新系统
+yum clean all #清理全部缓存文件
+
+3.清空yum 缓存，并重建yum缓存，执行以下命令：
+yum clean all && yum clean metadata && yum clean dbcache && yum makecache && yum update -y
+
+使用 Sendmail 通过 PHP 发送邮件
+yum install sendmail -y
+
+----------------------------------------------------------------------
+
+uname -a
+ 
+2.查询系统中全部的内核:
+ 
+# rpm -qa | grep kernel
+ 
+3.将你想删除的内核删除掉:(例如,在我的系统中,我要删掉kernel-3.10.0-22.13.1.el7.x86_64的内核,需要把所有含有kernel-3.10.0-22.13.1.el7.x86_64字样的全部删掉)
+ 
+#yum remove kernel-3.10.0-229.el7.x86_64
+
+#yum remove kernel-devel-3.10.0-229.el7.x86_64
+
+----------------------------------------------------------------------
+
+首先查看机器上有多少块硬盘：
+fdisk -l
+
+硬盘分区
+fdisk /dev/sdb
+
+格式化磁盘并写入文件系统
+mkfs.xfs -f /dev/sdb1
+
+挂载新硬盘到操作系统的某个节点上
+mount -t xfs /dev/sdb1 /home
+
+执行df命令查看磁盘信息，确认挂载新硬盘成功
+df -kh
+
+自动挂载分区
+编辑/etc/fstab里加入：输入红色内容
+/dev/sdb1               /home                   xfs     defaults        0 0
+
+----------------------------------------------------------------------
+
+修改主机名
+
+第一种：hostname 主机名
+
+01.hostname 主机名称 
+
+这种方式，只能修改临时的主机名，当重启机器后，主机名称又变回来了。
+
+第二种：hostnamectl set-hostname <hostname>
+
+命令行中输入
+
+01.hostnamectl set-hostname <主机名> 
+
+使用这种方式修改，可以永久性的修改主机名称！
+
+#################################################
+
+修改/etc/hostname主机名后一定要手动更新/etc/hosts
+
+#################################################
+
+----------------------------------------------------------------------
+
+firewall改为iptables防火墙。
+
+1、关闭firewall：
+
+systemctl stop firewalld.service #停止firewall
+
+systemctl disable firewalld.service #禁止firewall开机启动
+
+2、安装iptables防火墙
+
+yum install iptables-services #安装
+
+vi /etc/sysconfig/iptables #编辑防火墙配置文件
+
+# Firewall configuration written by system-config-firewall
+# Manual customization of this file is not recommended.
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+COMMIT
+
+# Generated by iptables-save v1.4.21 on Wed Oct 21 22:38:48 2020
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [119:7362]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+COMMIT
+# Completed on Wed Oct 21 22:38:48 2020
+
+
+:wq! #保存退出
+
+systemctl restart iptables.service #最后重启防火墙使配置生效
+
+systemctl enable iptables.service #设置防火墙开机启动
+
+----------------------------------------------------------------------
+
+firewall-cmd --list-ports                                     # 查看开放的端口
+firewall-cmd --list-services                                  # 查看开放的服
+
+
+1、firewalld的基本使用
+启动： systemctl start firewalld
+查看状态： systemctl status firewalld 
+停止： systemctl disable firewalld
+禁用： systemctl stop firewalld
+ 
+2.systemctl是CentOS7的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。
+启动一个服务：systemctl start firewalld.service
+关闭一个服务：systemctl stop firewalld.service
+重启一个服务：systemctl restart firewalld.service
+显示一个服务的状态：systemctl status firewalld.service
+在开机时启用一个服务：systemctl enable firewalld.service
+在开机时禁用一个服务：systemctl disable firewalld.service
+查看服务是否开机启动：systemctl is-enabled firewalld.service
+查看已启动的服务列表：systemctl list-unit-files|grep enabled
+查看启动失败的服务列表：systemctl --failed
+
+3.配置firewalld-cmd
+
+查看版本： firewall-cmd --version
+查看帮助： firewall-cmd --help
+显示状态： firewall-cmd --state
+查看所有打开的端口： firewall-cmd --zone=public --list-ports
+更新防火墙规则： firewall-cmd --reload
+查看区域信息:  firewall-cmd --get-active-zones
+查看指定接口所属区域： firewall-cmd --get-zone-of-interface=eth0
+拒绝所有包：firewall-cmd --panic-on
+取消拒绝状态： firewall-cmd --panic-off
+查看是否拒绝： firewall-cmd --query-panic
+
+那怎么开启一个端口呢
+添加
+firewall-cmd --zone=public --add-port=80/tcp --permanent    （--permanent永久生效，没有此参数重启后失效）
+firewall-cmd --zone=public --add-service=http --permanent
+重新载入
+firewall-cmd --reload
+查看
+firewall-cmd --zone=public --query-port=80/tcp
+删除
+firewall-cmd --zone=public --remove-port=22/tcp --permanent
+firewall-cmd --zone=public --remove-service=http
+
+----------------------------------------------------------------------
+
+注释掉不需要的用户和用户组
+vi /etc/passwd
+userdel adm
+userdel lp
+userdel sync
+userdel shutdown
+userdel halt
+userdel news
+userdel mail
+userdel uucp
+userdel operator
+userdel games
+userdel gopher
+userdel ftp
+vi /etc/group
+groupdel adm
+groupdel lp
+groupdel mail
+groupdel news
+groupdel uucp
+groupdel games
+groupdel dip
+groupdel pppusers
+groupdel slipusers
+
+----------------------------------------------------------------------
+
+账户安全
+1.1 锁定系统中多余的自建帐号
+检查方法:
+执行命令
+#cat /etc/passwd
+#cat /etc/shadow
+查看账户、口令文件，与系统管理员确认不必要的账号。对于一些保留的系统伪帐户如：bin, sys，adm，uucp，lp, nuucp，hpdb, www, daemon等可根据需要锁定登陆。
+备份方法：
+#cp -p /etc/passwd /etc/passwd_bak
+#cp -p /etc/shadow /etc/shadow_bak
+加固方法:
+使用命令passwd -l <用户名>锁定不必要的账号。
+使用命令passwd -u <用户名>解锁需要恢复的账号。
+
+检查shadow中空口令帐号
+检查方法：
+#awk -F: '($2 == "") { print $1 }' /etc/shadow
+备份方法：cp -p /etc/shadow /etc/shadow_bak
+加固方法：对空口令账号进行锁定，或要求增加密码
+
+用户鉴别设置帐户锁定登录失败锁定次数、锁定时间
+# cat /etc/pam.d/system-auth   查看有无auth required pam_tally.so条目的设置
+# vi /etc/pam.d/system-auth
+auth required pam_tally.so onerr=fail deny=6 unlock_time=300  设置为密码连续错误6次锁定，锁定时间300秒
+解锁用户 faillog  -u  <用户名>  -r
+
+修改帐户TMOUT值，设置自动注销时间
+检查方法：
+# cat /etc/profile    # 查看有无TMOUT的设置
+# vi /etc/profile
+export TMOUT=600    # 无操作600秒后自动退出
+
+passwd -l bin
+passwd -l daemon
+passwd -l adm
+passwd -l lp
+passwd -l sync
+passwd -l shutdown
+passwd -l halt
+passwd -l mail
+passwd -l operator
+passwd -l games
+passwd -l ftp
+passwd -l nobody
+passwd -l dbus
+passwd -l polkitd
+passwd -l avahi
+passwd -l avahi-autoipd
+passwd -l postfix
+passwd -l sshd
+passwd -l systemd-network
+passwd -l saslauth
+passwd -l mailnull
+passwd -l smmsp
+passwd -l tss
+passwd -l ntp
+passwd -l mysql
+passwd -l www
+
+----------------------------------------------------------------------
+
+检查密码重用是否受限制
+
+在 /etc/pam.d/password-auth 和 /etc/pam.d/system-auth 中
+password sufficient pam_unix.so 这行的末尾配置remember参数为5-24之间，原来的内容不用更改，只在末尾加了remember=5。
+
+----------------------------------------------------------------------
+
+密码复杂度检查
+
+编辑/etc/security/pwquality.conf，把minlen（密码最小长度）设置为8-32位，
+把minclass（至少包含小写字母、大写字母、数字、特殊字符等4类字符中等3类或4类）设置为3或4。如：
+
+minlen=10
+minclass=3
+
+----------------------------------------------------------------------
+
+禁止被 ping 有则修改，无则添加
+# vi /etc/sysctl.conf
+et.ipv4.icmp_echo_ignore_all=0
+
+防火墙禁止被ping
+# firewall-cmd --permanent --add-rich-rule='rule protocol value=icmp drop'
+# firewall-cmd --reload
+
+----------------------------------------------------------------------
+
+vi /etc/host.conf 该文件指定如何解析主机名。Linux通过解析器库来获得主机名对应的IP地址。
+order  bind,hosts
+multi  on
+nospoof  on
+
+order  bind,hosts 指定主机名查询顺序，这里规定先使用DNS来解析域名，然后再查询“/etc/hosts”文件(也可以相反)。
+multi  on 指定是否“/etc/hosts”文件中指定的主机可以有多个地址，拥有多个IP地址的主机一般称为多穴主机。
+nospoof  on 指不允许对该服务器进行IP地址欺骗。IP欺骗是一种攻击系统安全的手段，通过把IP地址伪装成别的计算机，来取得其它计算机的信任。
+
+----------------------------------------------------------------------
+
+去除系统相关信息
+
+echo "Welcome to Server" >/etc/issue
+
+CentOS release 6.5 (Final)
+Kernel \r on an \m
+
+echo "Welcome to Server" >/etc/redhat-release
+
+CentOS release 6.5 (Final)
+
+----------------------------------------------------------------------
+
+vi /etc/php.ini   #编辑
+
+date.timezone= PRC     #在946行 把前面的分号去掉，改为date.timezone = PRC
+
+disable_functions = phpinfo,eval,passthru,exec,system,chroot,scandir,chgrp,
+
+chown,shell_exec,proc_open,proc_get_status,ini_alter,ini_restore,dl,pfsockopen,
+
+openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,
+
+fsockopen,escapeshellcmd,dll,popen,disk_free_space,checkdnsrr,getservbyname,
+
+getservbyport,disk_total_space,posix_ctermid,posix_get_last_error,posix_getcwd,
+
+posix_getegid,posix_geteuid,posix_getgid,posix_getgrgid,posix_getgrnam,posix_getgroups,
+
+posix_getlogin,posix_getpgid,posix_getpgrp,posix_getpid,posix_getppid,posix_getpwnam,
+
+posix_getpwuid,posix_getrlimit,posix_getsid,posix_getuid,posix_isatty,posix_kill,posix_mkfifo,
+
+posix_setegid,posix_seteuid,posix_setgid,posix_setpgid,posix_setsid,posix_setuid,posix_strerror,
+
+posix_times,posix_ttyname,posix_uname
+
+----------------------------------------------------------------------
+
+php超时
+/usr/local/php/etc/php.ini
+
+max_execution_time = 300
+
+/usr/local/php/etc/php-fpm.conf
+
+request_terminate_timeout = 300
+
+----------------------------------------------------------------------
+
+php版本号隐藏
+/usr/local/php/etc/php.ini
+
+expose_php = Off
+
+nginx的版本号隐藏
+
+/usr/local/nginx/conf/nginx.conf
+在http字段上，添加以下一行代码即可实现了：
+
+server_tokens off;
+
+/usr/local/nginx/conf/fastcgi.conf
+删除 $nginx_version
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version; 
+
+/usr/local/nginx/conf/fastcgi_params
+删除 $nginx_version
+fastcgi_param  SERVER_SOFTWARE    nginx/$nginx_version;
+
+apache版本号隐藏 
+
+/usr/local/apache/conf/httpd.conf
+
+ServerTokens ProductOnly
+ServerSignature Off
+
+----------------------------------------------------------------------
+
+nginx的access_log关闭
+
+用Nginx做Web服务器，如果没有处理好日志，日志文件可能会很恐怖~10G、20G
+
+可以修改nginx.conf 找到access_log：
+
+access_log /dev/null;
+error_log /dev/null;
+
+开启Nginx的WEB访问日志记录： 
+1、打开conf/nginx.conf配置文件，含主配置文件中include项包含的子配置文件； 
+2、在http下配置access_log项
+access_log logs/host.access.log main; 
+3、并在主配置文件，及主配置文件下的include文件中 删除off项或配置为适当值
+
+----------------------------------------------------------------------
+
+隐藏Nginx后端服务指定Header的状态： 
+1、打开conf/nginx.conf配置文件； 
+2、在http下配置proxy_hide_header项； 增加或修改为 proxy_hide_header X-Powered-By; proxy_hide_header Server;
+
+----------------------------------------------------------------------
+
+Nginx 禁止IP访问及未绑定的域名跳转
+listen 80 default;
+后面的default参数表示这个是默认虚拟主机。
+
+这个设置非常有用。
+比如别人通过ip或者未知域名访问你的网站的时候，你希望禁止显示任何有效内容，可以给他返回500.
+目前国内很多机房都要求网站主关闭空主机头，防止未备案的域名指向过来造成麻烦。就可以这样设置：
+server {
+listen 80 default;
+return 444;
+}
+
+也可以把这些流量收集起来，导入到自己的网站，只要做以下跳转设置就可以：
+server {
+listen 80 default;
+rewrite ^(.*) http://www.linuxidc.com permanent;
+}
+
+server
+    {
+        listen 443 default;
+        return 444;
+
+        server_name _;
+        index index.html index.htm;
+        root  /home/wwwroot/default;
+
+        ssl_certificate /usr/local/nginx/conf/ssl/default/fullchain.crt;
+        ssl_certificate_key /usr/local/nginx/conf/ssl/default/localhost.key;
+
+    }
+
+----------------------------------------------------------------------
+
+如下是在nginx的LB代理层使用过的一个配置（nginx.conf中配置）：
+
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                          '"$http_host" - $status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"'
+                          '"$request_time" - $ssl_protocol - $ssl_cipher';
+
+
+参数                      说明                                         示例
+
+$remote_addr, $http_x_forwarded_for             客户端地址             211.28.65.253
+$remote_user             客户端用户名称                                --
+$time_local              访问时间和时区                                18/Jul/2012:17:00:01 +0800
+$request                 请求的URI和HTTP协议                           "GET /article-10000.html HTTP/1.1"
+$http_host               请求地址，即浏览器中你输入的地址（IP或域名）     www.k82.org 192.168.100.100
+$status                  HTTP请求状态                                  200
+$body_bytes_sent         发送给客户端的字节数，不包括响应头的大小； 该变量与Apache模块mod_log_config里的“%B”参数兼容。
+$bytes_sent              发送给客户端的总字节数。
+$connection              连接的序列号。
+$connection_requests     当前通过一个连接获得的请求数量。
+$upstream_status         upstream状态                                  200
+$body_bytes_sent         发送给客户端文件内容大小                        1547
+$http_referer            url跳转来源                                   https://www.baidu.com/
+$http_user_agent         用户终端浏览器等信息                          "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1;....
+$ssl_protocol            SSL协议版本                                   TLSv1
+$ssl_cipher              交换数据中的算法                               RC4-SHA
+$upstream_addr           后台upstream的地址，即真正提供服务的主机地址     10.10.10.100:80
+$request_time            整个请求的总时间                               0.205
+$request_length          请求的长度（包括请求行，请求头和请求正文）。
+$upstream_response_time  请求过程中，upstream响应时间                    0.002
+
+----------------------------------------------------------------------
+
+MySQL日志
+
+/etc/my.cnf
+
+修改默认3306端口
+port=3506
+
+禁用local-infile选项
+在mysqld 段落中配置local-infile参数为0，并重启mysql服务
+local-infile=0
+
+禁用symbolic-links选项
+在mysqld 段落中配置symbolic-links=0，5.6及以上版本应该配置为skip_symbolic_links=yes
+
+确保配置了log-error选项
+在mysqld_safe 段落中配置log-error参数，<log_path>代表存放日志文件路径，如：/var/log/mysqld.log
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+
+自动清理MySQL binlog日志
+expire_logs_days = 10
+
+关闭MySQL日志
+#log-bin=mysql-bin 
+#binlog_format=mixed
+
+----------------------------------------------------------------------
+
+mariadb默认的数据文档存储目录为/var/lib/mysql，要想将默认创建目录改成/data，需要一下操作：
+1、创建/data目录
+      mkdir /data
+      chmod  777 /data(要给这个目录至少要附加读写权限)
+
+2、把mariadb服务停掉：
+　　systemctl stop mariadb.service
+
+3、把/var/lib/mysql整个目录复制到/data
+　　cp -rp /var/lib/mysql/*　/data/
+　　这样就把MySQL的数据文档复制到了/data下
+　　-p 或 --preserve    保留源文件或目录的属性，包括所有者、所属组、权限与时间
+
+4、编辑mariadb的配置文档/etc/my.cnf
+
+    在[client]下添加：
+    把原来的socket=/var/lib/mysql/mysql.sock，前边加#注释掉，添加socket=/data/mysql.sock（以防有问题再改回来）。
+    在[mysqld]下添加：
+ 　把原来的socket=/var/lib/mysql/mysql.sock，前边加#注释掉，添加socket=/data/mysql.sock（以防有问题再改回来）。
+
+　datadir =/datal　　   (这行没有，需要自己加上)
+    
+    保存后退出。
+ 
+5、 chown -R mariadb:mariadb /home/var/mariadb
+
+    chown -R www:www /home/var/mysql.sock
+
+6、重新启动mariadb服务
+　　systemctl start mariadb.service。 
+
+----------------------------------------------------------------------
+
+Apache 关闭 access_log 并优化 error_log
+
+在 Apache 配置文件里面注释掉下面几行：
+
+#<IfModule log_config_module>
+# LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+# LogFormat "%h %l %u %t \"%r\" %>s %b" common
+
+# <IfModule logio_module>
+# LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+# </IfModule>
+
+# CustomLog logs/access_log common
+#</IfModule>
+
+然后重启 Apache WEB 服务器就可以了。
+另外顺便把 error_log 也优化了：
+
+LogLevel warn
+
+改成：
+
+LogLevel crit
+
+----------------------------------------------------------------------
+
+301重定向方法
+
+进行了301重定向，把www.129.co和129.co合并，并把之前的域名也一并合并. 有两种实现方法,第一种方法是判断nginx核心变量host(老版本是http_host)：
+server {
+server_name www.129.co 129.co ;
+if ($host != 'www.129.co' ) {
+rewrite ^/(.*)$ http://www.129.co/$1 permanent;
+}
+...
+}
+
+last – 基本上都用这个Flag。
+break – 中止Rewirte，不在继续匹配
+redirect – 返回临时重定向的HTTP状态302
+permanent – 返回永久重定向的HTTP状态301
+
+Nginx的重定向用到了Nginx的HttpRewriteModule，下面简单解释以下如何使用的方法：
+rewrite命令
+
+nginx的rewrite相当于apache的rewriterule(大多数情况下可以把原有apache的rewrite规则加上引号就可以直接使用)，它可以用在server,location 和IF条件判断块中,命令格式如下：
+rewrite 正则表达式 替换目标 flag标记
+flag标记可以用以下几种格式：
+last – 基本上都用这个Flag。
+break – 中止Rewirte，不在继续匹配
+redirect – 返回临时重定向的HTTP状态302
+permanent – 返回永久重定向的HTTP状态301
+
+----------------------------------------------------------------------
+
+service nginx restart
+service php-fpm restart
+service mysqld restart
+
+chown nginx.nginx /home/wwwroot -R #设置权限
+
+chown nginx.nginx /var/lib/php/session  -R #设置权限
+
+----------------------------------------------------------------------
+
+location = /uri	= 表示精确匹配
+location ^~ /uri	^ 进行前缀匹配，~ 表示区分大小写
+location ~ pattern	~ 区分大小写的匹配
+location ~* pattern	~* 不区分大小写的匹配
+location /uri	不带任何修饰符，也表示前缀匹配，但是在正则匹配之后
+location /	                通用匹配，任何未匹配到其它 location 的请求都会匹配到，相当于 switch 中的 default
+location !~	区分大小写不匹配
+location !~*	不区分大小写不匹配
+
+配置禁止访问目录的时候，加斜杠( / )和不加斜杠( / )的区别
+加斜杠( / )禁止访问目录。不加斜杠( / )禁止访问目录下的文件
+
+nginx禁止访问某个文件和目录
+
+        location ~* ^/(Lib|Public|Runtime|Tpl|Uploads)/.*\.(php|php5|php4)$ {
+            return 404;
+        }
+
+注意：要在解析php之前加入，比如：include enable-php-pathinfo.conf; 上面
+
+        location ~ [^/]\.php(/|$)
+        {
+            try_files $uri =404;
+            fastcgi_pass  unix:/tmp/php-cgi.sock;
+            fastcgi_index index.php;
+            include fastcgi.conf;
+        }
+
+nginx怎样禁止直接访问某个目录及里面的文件？
+
+location ~ /var/www/school/application {
+deny all;
+}
+
+----------------------------------------------------------------------
+
+匹配判断
+~ 为区分大小写匹配; !~为区分大小写不匹配
+~* 为不区分大小写匹配；!~为不区分大小写不匹配
+例如下面设定nginx在用户使用ie的使用重定向到/nginx-ie目录下：
+if ($http_user_agent ~ MSIE) {
+　　rewrite ^(.*)$ /nginx-ie/$1 break;
+}
+
+----------------------------------------------------------------------
+
+文件和目录判断
+-f和!-f判断是否存在文件
+-d和!-d判断是否存在目录
+-e和!-e判断是否存在文件或目录
+-x和!-x判断文件是否可执行
+例如下面设定nginx在文件和目录不存在的时候重定向：
+if (!-e $request_filename) {
+　　proxy_pass http://127.0.0.1;
+}
+
+----------------------------------------------------------------------
+
+返回http代码，例如设置nginx防盗链：
+location ~* \.(gif|jpg|png|swf|flv)$ {
+　　valid_referers none blocked www.test.com www.test1.com;
+　　if ($invalid_referer) {
+　　return 404;
+　　}
+} 
+
+----------------------------------------------------------------------
+
+关闭重启ctl-alt-delete组合键
+[root@localhost ~]# vi /etc/init/control-alt-delete.conf
+#exec /sbin/shutdown -r now "Control-Alt-Deletepressed" #注释掉
+
+----------------------------------------------------------------------
+
+禁止非root用户执行/etc/rc.d/init.d/下的系统命令
+chmod -R 700 /etc/rc.d/init.d/*
+chmod -R 777 /etc/rc.d/init.d/*    #恢复默认设置
+
+----------------------------------------------------------------------
+
+限制不同文件的权限
+chattr +a .bash_history           #避免删除.bash_history或者重定向到/dev/null
+chattr +i .bash_history
+chmod 700 /usr/bin                恢复  chmod 555 /usr/bin
+chmod 700 /usr/bin/vim         恢复  chmod 755 /usr/bin/vim
+chmod 700 /usr/bin/tail          恢复  chmod 755 /usr/bin/tail
+chmod 700 /usr/bin/less         恢复  chmod 755 /usr/bin/less
+chmod 700 /usr/bin/head       恢复  chmod 755 /usr/bin/head
+chmod 700 /bin/cat                恢复  chmod 755 /bin/cat
+chmod 700 /bin/netstat          恢复  chmod 755 /bin/netstat
+chmod 700 /bin/ping              恢复  chmod 4755 /bin/ping
+chmod 700 /bin/uname          恢复  chmod 755 /bin/uname
+chmod 500 /bin/ps                 恢复  chmod 755 /bin/ps
+
+----------------------------------------------------------------------
+
+给下面的文件加上不可更改属性，从而防止非授权用户获得权限
+chattr +i /etc/passwd
+chattr +i /etc/shadow
+chattr +i /etc/group
+chattr +i /etc/gshadow
+chattr +i /etc/services    #给系统服务端口列表文件加锁,防止未经许可的删除或添加服务
+lsattr  /etc/passwd   /etc/shadow  /etc/group  /etc/gshadow   /etc/services   #显示文件的属性
+注意：执行以上权限修改之后，就无法添加删除用户了。
+
+----------------------------------------------------------------------
+
+增强特殊文件权限
+
+给下面的文件加上不可更改属性，从而防止非授权用户获得权限
+
+chattr +i /etc/passwd
+chattr +i /etc/shadow
+chattr +i /etc/group
+chattr +i /etc/gshadow
+chattr +i /etc/services     #给系统服务端口列表文件加锁,防止未经许可的删除或添加服务
+chattr +i /etc/my.cnf
+chattr +i /etc/pam.d/su
+chattr +i /etc/ssh/sshd_config
+chattr +i /usr/local/nginx/conf/nginx.conf
+chattr +i /usr/local/php/etc/php.ini
+
+----------------------------------------------------------------------
+
+清除Linux命令的历史记录
+history -c
+
+----------------------------------------------------------------------
+
+CetnOS 7默认防火墙FirewallD的使用说明
+
+1. firewalld简介
+
+CetnOS 7默认防火墙使用firewalld替代了之前的iptables，主要特点：动态管理防火墙，不需要重启整个防火墙便可应用更改；使用“区域（zone）”概念。
+
+firewalld支持 IPv4, IPv6 防火墙设置以及以太网桥接，并且拥有运行时配置和永久配置选项。firewalld也支持允许服务或者应用程序直接添加防火墙规则的接口。firewalld无法解析由 iptables 和 ebtables 命令行工具添加的防火墙规则。firewalld和iptables不能同时运行，只能选择其中之一。
+
+
+2. “区域（zone）”介绍
+
+区域定义了网络连接的可信等级。这是一个一对多的关系，这意味着一次连接可以仅仅是一个区域的一部分，而一个区域可以用于很多连接。区域按照从不信任到信任的顺序排序：
+
+丢弃（drop）：任何流入网络的包都被丢弃，不作出任何响应。只允许流出的网络连接。
+阻塞（block）：任何进入的网络连接都被拒绝，并返回 IPv4 的 icmp-host-prohibited 报文或者 IPv6 的 icmp6-adm-prohibited 报文。只允许由该系统初始化的网络连接。
+公开（public）：用以可以公开的wangl，默认区域。只允许选中的连接接入。
+外部（external）：用在路由器等启用伪装的外部网络。只允许选中的连接接入。
+隔离区（dmz）：用以允许隔离区（dmz）中的电脑有限地被外界网络访问。只接受被选中的连接。
+工作（work）：用在工作网络。只接受被选中的连接。
+家庭（home）：用在家庭网络。只接受被选中的连接。
+内部（internal）：用在内部网络。只接受被选中的连接。
+受信任的（trusted）：允许所有网络连接。
+区域设置以 ZONE= 选项 存储在网络连接的ifcfg文件中。如果这个选项缺失或者为空，firewalld 将使用配置的默认区域。在/etc/firewalld/zones下面新增或修改区域。
+
+网络接口可以指定到某个区域，未指定区域的网络接口一律配置到默认区域。
+
+3. firewalld配置文件
+
+/usr/lib/firewalld/ 存放默认配置文件，不能被修改，即使修改也会随着 firewalld 软件包的更新被重置。
+
+/etc/firewalld/ 这里的配置文件可以是系统管理员通过配置接口定制的，也可以是手动定制的。这些文件将替代默认配置文件生效。
+
+通常将配置文件从/usr/lib/firewalld/拷贝到/etc/firewalld/ 相应目录，再根据需求进行修改。
+
+4. firewalld服务常用操作
+
+启动firewalld并设为开机自启
+systemctl start firewalld.service
+systemctl enable firewalld.service
+
+重载firewalld配置文件，不改变当前连接状态
+systemctl reload firewalld.service
+
+重启firewalld服务
+systemctl restart firewalld.service
+
+停止firewalld服务
+systemctl stop firewalld.service
+
+禁用firewalld服务
+systemctl disable firewalld.service
+
+查看firewalld服务状态
+systemctl status firewalld.service
+
+5. firewall-cmd常用命令
+firewalld有图像界面工具firewall-config和命令行工具firewall-cmd，服务器上通常使用命令行工具firewall-cmd。
+
+firewall-cmd命令默认同时对IPv4和IPv6生效；
+加参数–zone=XXX为指定命令操作区域，不加此参数对默认区域操作；
+加参数–permanent为使命令在firewalld重载后永久生效，不加此参数命令立刻生效但firewalld重载后失效。
+
+查询防火墙运行状态
+firewall-cmd --state
+
+查询防火墙版本
+firewall-cmd --version
+
+查询防火墙默认区域配置信息
+firewall-cmd --list-all
+
+查询防火墙所有区域配置信息，且分屏显示
+firewall-cmd --list-all-zones | more
+
+设置默认区域为public，立刻生效
+（也可以修改/etc/firewalld/firewalld.conf文件中DefaultZone=public，重载后生效）
+firewall-cmd --set-default-zone=public
+
+默认区域开启TCP 8080端口，重载后永久生效，可以设定端口号范围比如6000-7000
+firewall-cmd --permanent --add-port=8080/tcp
+
+默认区域关闭TCP 8080端口，重载后永久生效
+firewall-cmd --permanent --remove-port=8080/tcp
+
+默认区域开启HTTP服务（默认配置下等于开启TCP 80端口），重载后永久生效
+firewall-cmd --permanent --add-service=http
+
+默认区域关闭HTTP服务（默认配置下等于关闭TCP 80端口），重载后永久生效
+firewall-cmd --permanent --remove-service=http
+
+默认区域禁止ping，重载后永久生效
+firewall-cmd --permanent --add-icmp-block=echo-reply
+firewall-cmd --permanent --add-icmp-block=echo-request
+
+重载防火墙配置，使用参数–reload保持当前连接，使用参数–complete-reload重置连接
+firewall-cmd --reload
+firewall-cmd --complete-reload
+
+6. 使用“Rich Language” 配置复杂防火墙规则
+
+默认区域新增Rich Language规则，规则内容为：在IPv4拒绝来自IP 192.168.111.111的访问，重载后永久生效。
+firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="192.168.111.111" reject'
+
+默认区域移除上述Rich Language规则，重载后永久生效。
+firewall-cmd --permanent --remove-rich-rule='rule family="ipv4" source address="192.168.111.111" reject'
+
+默认区域查询上述Rich Language规则是否存在
+firewall-cmd --query-rich-rule='rule family="ipv4" source address="192.168.111.111" reject'
+
+7. firewalld直接接口（firewall-cmd –direct 命令）
+
+firewall-cmd –direct 命令主要用于使服务和应用程序能够增加规则，不推荐手动操作；命令立刻生效，但重载后失效。如果不熟悉 iptables ，使用直接接口非常危险，可能无意间导致防火墙被入侵。具体操作就不介绍了。
+
+
+----------------------------------------------------------------------
+
+
+SSH由客户端和服务端的软件组成，在客户端可以使用的软件有SecureCRT、putty、Xshell等，
+而在服务器端运行的是一个sshd的服务，通过使用SSH，可以把所有传输的数据进行加密，而且也能够
+防止dns和IP欺骗，此外，SSH传输的数据是经过压缩的，可以加快传输速度
+其服务器端的配置文件为/etc/ssh/sshd_config
+[root@test ~]# cat /etc/ssh/sshd_config
+#       $OpenBSD: sshd_config,v 1.73 2005/12/06 22:38:28 reyk Exp $
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more information.
+# This sshd was compiled with PATH=/usr/local/bin:/bin:/usr/bin
+# The strategy used for options in the default sshd_config shipped with
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented.  Uncommented options change a
+# default value.
+ 
+#############1. 关于 SSH Server 的整体设定##############
+#Port 22    
+##port用来设置sshd监听的端口，为了安全起见，建议更改默认的22端口为5位以上陌生端口
+#Protocol 2,1
+Protocol 2
+##设置协议版本为SSH1或SSH2，SSH1存在漏洞与缺陷，选择SSH2
+#AddressFamily any
+#ListenAddress 0.0.0.0
+#ListenAddress用来设置sshd服务器绑定的IP地址
+##监听的主机适配卡，举个例子来说，如果您有两个 IP， 分别是 192.168.0.11 及 192.168.2.20 ，那么只想要
+###开放 192.168.0.11 时，就可以设置为：ListenAddress 192.168.0.11
+####表示只监听来自 192.168.0.11 这个 IP 的SSH联机。如果不使用设定的话，则预设所有接口均接受 SSH
+#############2. 说明主机的 Private Key 放置的档案##########　　　　　　　　　　　　　　　　　
+#ListenAddress ::
+##HostKey用来设置服务器秘钥文件的路径
+# HostKey for protocol version 1
+#HostKey /etc/ssh/ssh_host_key
+##设置SSH version 1 使用的私钥
+# HostKeys for protocol version 2
+#HostKey /etc/ssh/ssh_host_rsa_key
+##设置SSH version 2 使用的 RSA 私钥
+#HostKey /etc/ssh/ssh_host_dsa_key
+##设置SSH version 2 使用的 DSA 私钥
+
+#Compression yes　　　　　　
+##设置是否可以使用压缩指令
+# Lifetime and size of ephemeral version 1 server key
+#KeyRegenerationInterval 1h
+##KeyRegenerationInterval用来设置多长时间后系统自动重新生成服务器的秘钥，
+###（如果使用密钥）。重新生成秘钥是为了防止利用盗用的密钥解密被截获的信息。
+#ServerKeyBits 768
+##ServerKeyBits用来定义服务器密钥的长度
+###指定临时服务器密钥的长度。仅用于SSH-1。默认值是 768(位)。最小值是 512 。
+
+# Logging
+# obsoletes QuietMode and FascistLogging
+#SyslogFacility AUTH
+SyslogFacility AUTHPRIV
+##SyslogFacility用来设定在记录来自sshd的消息的时候，是否给出“facility code”
+#LogLevel INFO
+##LogLevel用来设定sshd日志消息的级别
+
+#################3.安全认证方面的设定################
+#############3.1、有关安全登录的设定###############
+# Authentication:
+##限制用户必须在指定的时限内认证成功，0 表示无限制。默认值是 120 秒。
+#LoginGraceTime 2m
+##LoginGraceTime用来设定如果用户登录失败，在切断连接前服务器需要等待的时间，单位为妙
+#PermitRootLogin yes
+##PermitRootLogin用来设置能不能直接以超级用户ssh登录，root远程登录Linux很危险，建议注销或设置为no
+#StrictModes yes
+##StrictModes用来设置ssh在接收登录请求之前是否检查用户根目录和rhosts文件的权限和所有权，建议开启
+###建议使用默认值"yes"来预防可能出现的低级错误。
+#RSAAuthentication yes
+##RSAAuthentication用来设置是否开启RSA密钥验证，只针对SSH1
+#PubkeyAuthentication yes
+##PubkeyAuthentication用来设置是否开启公钥验证，如果使用公钥验证的方式登录时，则设置为yes
+#AuthorizedKeysFile     .ssh/authorized_keys
+##AuthorizedKeysFile用来设置公钥验证文件的路径，与PubkeyAuthentication配合使用,默认值是".ssh/authorized_keys"。
+###该指令中可以使用下列根据连接时的实际情况进行展开的符号： %% 表示'%'、%h 表示用户的主目录、%u 表示该用户的用户名
+####经过扩展之后的值必须要么是绝对路径，要么是相对于用户主目录的相对路径。
+ 
+#############3.2、安全验证的设定###############
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+#RhostsRSAAuthentication no
+##是否使用强可信主机认证(通过检查远程主机名和关联的用户名进行认证)。仅用于SSH-1。
+###这是通过在RSA认证成功后再检查 ~/.rhosts 或 /etc/hosts.equiv 进行认证的。出于安全考虑，建议使用默认值"no"。
+# similar for protocol version 2
+#HostbasedAuthentication no
+##这个指令与 RhostsRSAAuthentication 类似，但是仅可以用于SSH-2。
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+# RhostsRSAAuthentication and HostbasedAuthentication
+#IgnoreUserKnownHosts no
+##IgnoreUserKnownHosts用来设置ssh在进行RhostsRSAAuthentication安全验证时是否忽略用户的“/$HOME/.ssh/known_hosts”文件
+# Don't read the user's ~/.rhosts and ~/.shosts files
+#IgnoreRhosts yes
+##IgnoreRhosts用来设置验证的时候是否使用“~/.rhosts”和“~/.shosts”文件
+# To disable tunneled clear text passwords, change to no here!
+#PasswordAuthentication yes
+##PasswordAuthentication用来设置是否开启密码验证机制，如果用密码登录系统，则设置yes
+#PermitEmptyPasswords no
+#PermitEmptyPasswords用来设置是否允许用口令为空的账号登录系统，设置no
+#PasswordAuthentication yes
+##是否允许使用基于密码的认证。默认为"yes"。
+PasswordAuthentication yes
+# Change to no to disable s/key passwords
+##设置禁用s/key密码
+#ChallengeResponseAuthentication yes
+##ChallengeResponseAuthentication 是否允许质疑-应答(challenge-response)认证
+ChallengeResponseAuthentication no
+ 
+########3.3、与 Kerberos 有关的参数设定，指定是否允许基于Kerberos的用户认证########
+#Kerberos options
+#KerberosAuthentication no
+##是否要求用户为PasswdAuthentication提供的密码必须通过Kerberos KDC认证，要使用Kerberos认证，
+###服务器必须提供一个可以校验KDC identity的Kerberos servtab。默认值为no
+#KerberosOrLocalPasswd yes
+##如果Kerberos密码认证失败，那么该密码还将要通过其他的的认证机制，如/etc/passwd
+###在启用此项后，如果无法通过Kerberos验证，则密码的正确性将由本地的机制来决定，如/etc/passwd，默认为yes
+#KerberosTicketCleanup yes
+##设置是否在用户退出登录是自动销毁用户的ticket
+#KerberosGetAFSToken no
+##如果使用AFS并且该用户有一个Kerberos 5 TGT,那么开启该指令后，
+###将会在访问用户的家目录前尝试获取一个AFS token,并尝试传送 AFS token 给 Server 端，默认为no
+ 
+####3.4、与 GSSAPI 有关的参数设定，指定是否允许基于GSSAPI的用户认证，仅适用于SSH2####
+##GSSAPI 是一套类似 Kerberos 5 的通用网络安全系统接口。
+###如果你拥有一套 GSSAPI库，就可以通过 tcp 连接直接建立 cvs 连接，由 GSSAPI 进行安全鉴别。
+# GSSAPI options
+#GSSAPIAuthentication no
+##GSSAPIAuthentication 指定是否允许基于GSSAPI的用户认证，默认为no
+GSSAPIAuthentication yes
+#GSSAPICleanupCredentials yes
+##GSSAPICleanupCredentials 设置是否在用户退出登录是自动销毁用户的凭证缓存
+GSSAPICleanupCredentials yes
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication mechanism.
+# Depending on your PAM configuration, this may bypass the setting of
+# PasswordAuthentication, PermitEmptyPasswords, and
+# "PermitRootLogin without-password". If you just want the PAM account and
+# session checks to run without PAM authentication, then enable this but set
+# ChallengeResponseAuthentication=no
+#UsePAM no
+##设置是否通过PAM验证
+UsePAM yes
+# Accept locale-related environment variables
+##AcceptEnv 指定客户端发送的哪些环境变量将会被传递到会话环境中。
+###[注意]只有SSH-2协议支持环境变量的传递。指令的值是空格分隔的变量名列表(其中可以使用'*'和'?'作为通配符)。
+####也可以使用多个 AcceptEnv 达到同样的目的。需要注意的是，有些环境变量可能会被用于绕过禁止用户使用的环境变量。
+#####由于这个原因，该指令应当小心使用。默认是不传递任何环境变量。
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL
+AllowTcpForwarding yes
+##AllowTcpForwarding设置是否允许允许tcp端口转发，保护其他的tcp连接
+#GatewayPorts no
+##GatewayPorts 设置是否允许远程客户端使用本地主机的端口转发功能，出于安全考虑，建议禁止
+ 
+#############3.5、X-Window下使用的相关设定###############
+#X11Forwarding no
+##X11Forwarding 用来设置是否允许X11转发
+X11Forwarding yes
+#X11DisplayOffset 10
+##指定X11 转发的第一个可用的显示区(display)数字。默认值是 10 。
+###可以用于防止 sshd 占用了真实的 X11 服务器显示区，从而发生混淆。
+X11DisplayOffset 10
+#X11UseLocalhost yes
+ 
+#################3.6、登入后的相关设定#################
+#PrintMotd yes
+##PrintMotd用来设置sshd是否在用户登录时显示“/etc/motd”中的信息，可以选在在“/etc/motd”中加入警告的信息
+#PrintLastLog yes
+#PrintLastLog 是否显示上次登录信息
+#TCPKeepAlive yes
+##TCPKeepAlive 是否持续连接，设置yes可以防止死连接
+###一般而言，如果设定这项目的话，那么 SSH Server 会传送 KeepAlive 的讯息给 Client 端，以确保两者的联机正常！
+####这种消息可以检测到死连接、连接不当关闭、客户端崩溃等异常。在这个情况下，任何一端死掉后， SSH 可以立刻知道，而不会有僵尸程序的发生！
+#UseLogin no
+##UseLogin 设置是否在交互式会话的登录过程中使用。默认值是"no"。
+###如果开启此指令，那么X11Forwarding 将会被禁止，因为login不知道如何处理 xauth cookies 。
+####需要注意的是，在SSH底下本来就不接受 login 这个程序的登入，如果指UsePrivilegeSeparation ，那么它将在认证完成后被禁用。
+UserLogin no　　　　　　　
+#UsePrivilegeSeparation yes
+##UsePrivilegeSeparation 设置使用者的权限
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#ShowPatchLevel no
+#UseDNS yes
+##UseDNS是否使用dns反向解析
+#PidFile /var/run/sshd.pid
+#MaxStartups 10
+##MaxStartups 设置同时允许几个尚未登入的联机，当用户连上ssh但并未输入密码即为所谓的联机，
+###在这个联机中，为了保护主机，所以需要设置最大值，预设为10个，而已经建立联机的不计算入内，
+####所以一般5个即可，这个设置可以防止恶意对服务器进行连接
+#MaxAuthTries 6
+##MaxAuthTries 用来设置最大失败尝试登陆次数为6，合理设置辞职，可以防止攻击者穷举登录服务器
+#PermitTunnel no
+ 
+############3.7、开放禁止用户设定############
+#AllowUsers<用户名1> <用户名2> <用户名3> ...
+##指定允许通过远程访问的用户，多个用户以空格隔开
+#AllowGroups<组名1> <组名2> <组名3> ...
+##指定允许通过远程访问的组，多个组以空格隔开。当多个用户需要通过ssh登录系统时，可将所有用户加入一个组中。
+#DenyUsers<用户名1> <用户名2> <用户名3> ...
+##指定禁止通过远程访问的用户，多个用户以空格隔开
+#DenyGroups<组名1> <组名2> <组名3> ...
+##指定禁止通过远程访问的组，多个组以空格隔开。
+# no default banner path
+#Banner /some/path
+# override default of no subsystems
+Subsystem       sftp    /usr/libexec/openssh/sftp-server
+ClientAliveInterval 3600
+ClientAliveCountMax 0
+
+----------------------------------------------------------------------
+
+# uname -a               # 查看内核/操作系统/CPU信息
+# head -n 1 /etc/issue   # 查看操作系统版本
+# cat /proc/cpuinfo      # 查看CPU信息
+# hostname               # 查看计算机名
+# lspci -tv              # 列出所有PCI设备
+# lsusb -tv              # 列出所有USB设备
+# lsmod                  # 列出加载的内核模块
+# env                    # 查看环境变量
+
+资源
+# free -m                # 查看内存使用量和交换区使用量
+# df -h                  # 查看各分区使用情况
+# du -sh <目录名>        # 查看指定目录的大小
+# grep MemTotal /proc/meminfo   # 查看内存总量
+# grep MemFree /proc/meminfo    # 查看空闲内存量
+# uptime                 # 查看系统运行时间、用户数、负载
+# cat /proc/loadavg      # 查看系统负载
+
+磁盘和分区
+# mount | column -t      # 查看挂接的分区状态
+# fdisk -l               # 查看所有分区
+# swapon -s              # 查看所有交换分区
+# hdparm -i /dev/hda     # 查看磁盘参数(仅适用于IDE设备)
+# dmesg | grep IDE       # 查看启动时IDE设备检测状况
+
+网络
+# ifconfig               # 查看所有网络接口的属性
+# iptables -L            # 查看防火墙设置
+# route -n               # 查看路由表
+# netstat -lntp          # 查看所有监听端口
+# netstat -antp          # 查看所有已经建立的连接
+# netstat -s             # 查看网络统计信息
+
+进程
+# ps -ef                 # 查看所有进程
+# top                    # 实时显示进程状态
+
+用户
+# w                      # 查看活动用户
+# id <用户名>            # 查看指定用户信息
+# last                   # 查看用户登录日志
+# cut -d: -f1 /etc/passwd   # 查看系统所有用户
+# cut -d: -f1 /etc/group    # 查看系统所有组
+# crontab -l             # 查看当前用户的计划任务
+
+服务
+# chkconfig --list       # 列出所有系统服务
+# chkconfig --list | grep on    # 列出所有启动的系统服务
+
+程序
+# rpm -qa                # 查看所有安装的软件包
+
+----------------------------------------------------------------------
+
+ps命令
+
+输入下面的ps命令，显示所有运行中的进程：
+
+# ps aux | less
+其中，
+
+-A：显示所有进程
+
+a：显示终端中包括其它用户的所有进程
+
+x：显示无控制终端的进程
+
+任务：查看系统中的每个进程。
+
+# ps -A
+# ps -e
+任务：查看非root运行的进程
+
+# ps -U root -u root -N
+任务：查看用户vivek运行的进程
+
+# ps -u vivek
+任务：top命令
+
+top命令提供了运行中系统的动态实时视图。在命令提示行中输入top：
+
+# top
+
+
+按q退出，按h进入帮助。
+
+任务：显示进程的树状图。
+
+pstree以树状显示正在运行的进程。树的根节点为pid或init。如果指定了用户名，进程树将以用户所拥有的进程作为根节点。
+
+$ pstree
+
+
+任务：使用ps列印进程树
+
+# ps -ejH
+# ps axjf
+任务：获得线程信息
+
+输入下列命令：
+
+# ps -eLf
+# ps axms
+任务：获得安全信息
+
+输入下列命令：
+
+# ps -eo euser,ruser,suser,fuser,f,comm,label
+# ps axZ
+# ps -eM
+任务：将进程快照储存到文件中
+
+输入下列命令：
+
+# top -b -n1 > /tmp/process.log
+你也可以将结果通过邮件发给自己：
+
+# top -b -n1 | mail -s 'Process snapshot' you@example.com
+任务：查找进程
+
+使用pgrep命令。pgrep能查找当前正在运行的进程并列出符合条件的进程ID。例如显示firefox的进程ID：
+
+$ pgrep firefox
+下面命令将显示进程名为sshd、所有者为root的进程。
+
+$ pgrep -u root sshd
+
+----------------------------------------------------------------------
+
+
+cert.pem	服务端证书
+
+chain.pem	浏览器需要的所有证书但不包括服务端证书，比如根证书和中间证书
+
+fullchain.pem	包括了cert.pem和chain.pem的内容
+
+privkey.pem	证书的私钥
+
+
+一般情况下fullchain.pem和privkey.pem就够用了
+
+----------------------------------------------------------------------
+
+单域名生成证书：
+
+./certbot-auto certonly --email info@k82.org --agree-tos --no-eff-email --webroot -w /home/wwwroot/k82 -d www.k82.org
+
+多域名单目录生成单证书：(即一个网站多个域名使用同一个证书)
+
+./certbot-auto certonly --email info@k82.org --agree-tos --no-eff-email --webroot -w /home/wwwroot/k82 -d www.k82.org -d bbs.k82.org
+
+多域名多目录生成一个证书：(即一次生成多个域名的一个证书)
+
+./certbot-auto certonly --email info@k82.org --agree-tos --no-eff-email --webroot -w /home/Website/K82ORG -d k82.org -d www.k82.org -w /home/WebSSL/CN3i5 -d 3i5.cn -d www.3i5.cn -w /home/wwwroot/enoou -d enoou.com -d www.enoou.com
+
+----------------------------------------------------------------------
+
+certbot 更新证书先在命令行模拟证书更新
+
+./certbot-auto renew --dry-run
+
+----------------------------------------------------------------------
+
+开启session_ticket
+
+在 nginx 配置目录下执行
+
+cd /opt
+mkdir ssl
+cd ssl
+
+openssl rand -out ticket.key 48
+
+编辑nginx.conf，在SSL配置后面加入下面两行
+
+ssl_session_ticket_key ssl/ticket.key;
+ssl_session_tickets on;
+
+----------------------------------------------------------------------
+
+配置dhparams长度
+
+cd /opt
+mkdir dhparam
+cd dhparam
+mkdir keys
+cd keys
+openssl dhparam -out dhparams.pem 2048
+cd ../
+sudo chmod 700 keys
+
+----------------------------------------------------------------------
+
+申请HSTS
+
+编辑nginx.conf，在SSL配置后面加入下面两行
+
+add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+
+https://hstspreload.org/
+https://hstspreload.appspot.com/ 
+
+如何撤销HSTS？通过Strict-Transport-Security: max-age=0将缓存设置为0可以撤销HSTS。
+
+----------------------------------------------------------------------
+HTTPS配置HPKP
+
+生成第一个指纹：
+openssl x509 -pubkey < /etc/letsencrypt/archive/k82.org/cert1.pem | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64
+
+执行以下命令：
+mkdir -p /opt/hpkp
+cp /etc/letsencrypt/archive/k82.org/privkey1.pem /opt/hpkp/all.first.key
+cp /etc/letsencrypt/csr/0000_csr-certbot.pem /opt/hpkp/all.first.csr
+
+生成备份key、csr和各自的指纹：
+
+cd /opt/hpkp
+openssl genrsa -out all.second.key 4096
+openssl req -new -key all.second.key -sha256 -out all.second.csr
+openssl req -pubkey < all.second.csr | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64
+
+######################################################################
+Country Name (2 letter code) [AU]:CN
+State or Province Name (full name) [Some-State]:Hunan
+Locality Name (eg, city) []:Longshan
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:
+Organizational Unit Name (eg, section) []:
+Common Name (e.g. server FQDN or YOUR name) []:k82.org
+Email Address []:info@k82.org
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+
+更改上述示例中的信息以适合您自己的注意，最后2个字段可以保留为空。现在CSR生成了，所有我们需要的是指纹，包括在HPKP标题中，我们很好。
+######################################################################
+
+openssl genrsa -out all.third.key 4096
+openssl req -new -key all.third.key -sha256 -out all.third.csr
+openssl req -pubkey < all.third.csr | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | base64
+
+----------------------------------------------------------------------
+
+server
+    {
+        listen 80;
+        #listen [::]:80;
+
+        # 强制http 301跳转
+        return 301 https://$host$request_uri;
+
+        server_name k82.org www.k82.org;
+        index index.html index.htm index.php;
+        root  /home/WebSite/K82ORG;
+
+        # redirect – 返回临时重定向的HTTP状态302
+        # permanent – 返回永久重定向的HTTP状态301
+
+        # rewrite ^/(.*) https://$host/$1 permanent;  // 301跳转设置 permanent;  302跳转设置 redirect;
+
+        include none.conf;
+        #error_page   404   /404.html;
+
+        # Deny access to PHP files in specific directory
+        #location ~ /(wp-content|uploads|wp-includes|images)/.*\.php$ { deny all; }
+
+        include enable-php.conf;
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+            expires      30d;
+            access_log  off;
+        }
+
+        location ~ .*\.(js|css|eot|ttf|woff|woff2)?$
+        {
+            expires      12h;
+            access_log  off;
+        }
+
+        location ~ /.well-known {
+            allow all;
+        }
+
+        location ~ /\.
+        {
+            deny all;
+        }
+
+        access_log  /home/wwwlogs/K82ORG.log;
+    }
+
+server
+    {
+        listen 443 ssl http2;
+        #listen [::]:443 ssl http2;
+
+        server_name k82.org www.k82.org;
+
+        charset utf-8;
+
+        index index.html index.htm index.php;
+        root  /home/WebSite/K82ORG;
+
+        if ($host != 'k82.org') {
+            rewrite ^/(.*)$ https://k82.org/$1 permanent;  // 301跳转设置 permanent;  302跳转设置 redirect;
+        }
+
+        # 开启 ssl 
+        ssl on;
+
+        # 由服务器选择适配算法而不是客户端 如果ssl协议只支持tlsv1.2 tlsv1.3新协议，设置为 off （nginx默认为off）
+        ssl_prefer_server_ciphers off;
+
+        # 支持的加密协议
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        # 声明在ECDH秘钥交换中要使用的curve的名字
+        ssl_ecdh_curve secp384r1;
+
+        # 支持的加密套件
+        ssl_ciphers "TLS13_AES_128_GCM_SHA256:TLS13_AES_256_GCM_SHA384:TLS13_CHACHA20_POLY1305_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+        # ssl_ciphers "EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5";
+
+        # 定义session缓存大小 10m 大约 40000 个 sessions
+        ssl_session_cache builtin:1000 shared:MozSSL:10m; 
+
+        # 定义session过期时间
+        ssl_session_timeout 5m;
+
+        # 会话恢复减少了TLS握手的开销注意集群情况下key值保持一致。
+        ssl_session_tickets on;
+        # 在file必须含有80或48个字节的随机数据
+        # openssl rand -out /usr/local/nginx/conf/ssl/ticket.key 80
+        ssl_session_ticket_key /usr/local/nginx/conf/ssl/ticket.key;
+
+        # https证书公钥
+        ssl_certificate /usr/local/nginx/conf/ssl/k82.org/k82.org/fullchain.pem;
+
+        # https证书私钥
+        ssl_certificate_key /usr/local/nginx/conf/ssl/k82.org/k82.org/privkey.pem;
+
+        # nginx默认会使用Diffiel-Hellman交换密钥是1024位的，相对不安全，所以需要替换使用更安全的。
+        # openssl dhparam -out /usr/local/nginx/conf/ssl/dhparam.pem 2048
+        ssl_dhparam /usr/local/nginx/conf/ssl/dhparam.pem;
+
+        # 启用OCSP stapling
+        ssl_stapling on;
+        # 启用OCSP响应验证，OCSP信息响应适用的证书  
+        ssl_stapling_verify on;
+        # valid表示缓存5分钟，resolver_timeout表示网络超时时间
+        resolver 8.8.8.8 8.8.4.4 216.146.35.35 216.146.36.36 223.5.5.5 223.6.6.6 valid=300s ipv6=off;
+        # resolver_timeout 表示网络超时时间
+        resolver_timeout 5s;
+        # 若 ssl_certificate 指令指定了完整的证书链，则 ssl_trusted_certificate 可省略。
+        ssl_trusted_certificate /usr/local/nginx/conf/ssl/k82.org/k82.org/fullchain.pem;
+
+        # 当客户端访问时 NginX 将去指定的证书中查找 OCSP 服务的地址，获得响应内容后通过证书链下发给客户端
+
+        # 启用OCSP stapling
+        ssl_stapling on;
+        # 启用OCSP响应验证，OCSP信息响应适用的证书
+        ssl_stapling_verify on;
+        # 利用 NginX 的 ssl_stapling_file 指令直接将 OCSP 响应存成文件
+
+        # openssl x509 -in  /usr/local/nginx/conf/ssl/k82.org/fullchain.pem -noout -text 
+        # 可以看到证书包含了 SAN 扩展，该扩展的值就是 *.k82.org
+        # Authority Information Access: 
+        # OCSP - URI:http://ocsp.int-x3.letsencrypt.org
+        # CA Issuers - URI:http://cert.int-x3.letsencrypt.org/
+
+        # OpenSSL 1.1.X 以上需要 "HOST"="r3.o.lencr.org" 否则 "HOST" "r3.o.lencr.org"  
+        # openssl ocsp -no_nonce -respout /usr/local/nginx/conf/ssl/k82.org/stapling_file.ocsp -issuer /usr/local/nginx/conf/ssl/k82.org/ca.cer -cert /usr/local/nginx/conf/ssl/k82.org/k82.org.cer -url http://r3.o.lencr.org/ -header "HOST" "r3.o.lencr.org" -verify_other /usr/local/nginx/conf/ssl/k82.org/fullchain.cer
+        ssl_stapling_file /usr/local/nginx/conf/ssl/k82.org/stapling_file.ocsp; 
+
+        resolver 127.0.0.1 ipv6=off;
+
+        # 有双向验证的需求，可以开启Nginx的客户端身份验证。Nginx将只接受包含有效客户端证书的请求
+        # 要求客户端身份验证
+        # ssl_verify_client on;
+        # 指定客户端证书到根证书的最大证书路径长度
+        # ssl_verify_depth 3;
+        # 指定允许签发客户端证书的CA证书
+        # ssl_client_certificate trustchain.crt;
+        # 完整证书链中需要包含的其他CA证书
+        # ssl_trusted_certificate root-ca.crt;
+        # 证书吊销列表
+        # ssl_crl revoked-certificates.crl;
+
+        # 禁止被外站frame嵌入引用
+        add_header X-Frame-Options "SAMEORIGIN" always;
+
+        add_header X-Robots-Tag none;
+        add_header Referrer-Policy "same-origin" always;
+        add_header X-UA-Compatible "IE=edge" always;
+        add_header X-Xss-Protection "1; mode=block" always;
+
+        add_header X-Xss-Pwnage "<script>alert('XSS');</script>" always;
+
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Feature-Policy "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'; midi 'none'; notifications 'none'; push 'none'; sync-xhr 'none'; speaker 'self'; vibrate 'none'; fullscreen 'self'" always;
+        add_header Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), midi=(), notifications=(), push=(), sync-xhr=(), speaker=(self), vibrate=(), fullscreen=(self)" always;
+
+        # 只允许同源下的资源
+        #  add_header Content-Security-Policy "default-src 'self' *.k82.org(该地址按需修改) 'unsafe-inline' blob: data: ;";
+
+        # HSTS (ngx_http_headers_module is required) (15768000 seconds = 6 months)
+        add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload" always;
+
+        location ~* /(app|system)/.*\.(php|php5|pl|py|jsp|sh|cgi|html|json)$
+        {
+            deny all;
+        }
+
+        location / {
+            try_files $uri $uri/ /index.php;
+        }
+
+        include none.conf;
+        error_page   404   /404.html;
+        error_page   403   /404.html;
+
+        # Deny access to PHP files in specific directory
+        #location ~ /(wp-content|uploads|wp-includes|images)/.*\.php$ { deny all; }
+
+        include enable-php.conf;
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+            expires      30d;
+            access_log  off;
+        }
+
+        location ~ .*\.(js|css|eot|ttf|woff|woff2)?$
+        {
+            expires      12h;
+            access_log  off;
+        }
+
+        location = /robots.txt
+        {
+            allow all;
+            log_not_found off;
+            access_log off;
+        }
+
+        location ~ /.well-known {
+            allow all;
+        }
+
+        location ~ /\.
+        {
+            deny all;
+            access_log off;
+        }
+
+        access_log  /home/wwwlogs/K82ORG.log SSL;
+    }
+
+----------------------------------------------------------------------
+
+测试OCSP是否装订有效
+openssl s_client -connect 129.co:443 -tls1 -tlsextdebug -status
+
+openssl s_client -connect 129.co:443 -servername 129.co -status -tlsextdebug < /dev/null 2>&1 | grep -i "OCSP response"
+
+----------------------------------------------------------------------
+
+CAA Record Helper
+https://sslmate.com/caa/
+
+K82.org.              300     IN      CAA     0 iodef "mailto:root@K82.org"
+K82.org.              300     IN      CAA     0 issue "letsencrypt.org"
+
+----------------------------------------------------------------------
+
+SSL 安全测试
+https://www.ssllabs.com/ssltest/index.html
+
+https://securityheaders.com/
+
+https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html
+
+SSL配置推荐
+https://ssl-config.mozilla.org/
+
+https://scotthelme.co.uk/
+
+https://content-security-policy.com/
+----------------------------------------------------------------------
+
+php Cookie会话安全
+
+register_shutdown_function('session_write_close');
+session_set_cookie_params(['lifetime' => time()+900,'path' => '/','domain' => $_SERVER['HTTP_HOST'],'secure' => TRUE,'httponly' => TRUE,'samesite' => 'lax']);
+session_name('__cflb');
+session_start();
+
+$arr_cookie_options = array (
+'expires' => $expire,
+'path' => $path,
+'domain' => $domain,
+'secure' => TRUE,
+'httponly' => TRUE,
+'samesite' => 'Lax');
+
+setcookie($name, $value, $arr_cookie_options);
+----------------------------------------------------------------------
+
+chrome://net-internals/#hsts
+
+https://validator.w3.org/
+
