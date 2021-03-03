@@ -149,8 +149,9 @@ class Engine {
         $this->set('sys.views.extension', '.php');
 
         $this->set(array(
-            'web.route' => require __DIR__ . '/config/Router.php',
+            'web.dict' => require __DIR__ . '/config/Dict.php',
             'web.third' => require __DIR__ . '/config/Third.php',
+            'web.route' => require __DIR__ . '/config/Router.php',
             'web.config' => require __DIR__ . '/config/Database.php',
         ));
 

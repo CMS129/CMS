@@ -112,6 +112,12 @@ class Common extends app\Engine
         return $this->get('web.config');
     }
 
+    // 获取替换词典
+    private function getDict()
+    {
+        return $this->get('web.dict');
+    }
+
     // RSA 公共证书
     public function getKey($name = 'public')
     {
@@ -139,7 +145,7 @@ class Common extends app\Engine
     // 定制设计回复模板
     public function getContactMB($email)
     {
-        return "<div style='width:640px; background:#fff; border:solid 1px #efefef; margin:0 auto; padding:35px 0 35px 0'><table width='560' border='0' align='center' cellpadding='0' cellspacing='0' style='margin:0 auto; margin-left:30px; margin-right:30px;'><tbody><tr><th valign='middle' style='height: 25px; line-height: 25px; padding: 15px 35px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #42a3d3; background-color: #49bcff; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;'><font face='微软雅黑' size='5' style='color: rgb(255, 255, 255); '>定制设计说明! （" . $this->getTitle() . "）</font></th></tr><tr><td><h3 style='font-weight:normal; font-size:18px; padding:25px 0px 0px 0px;'>尊敬的用户：<span style='font-weight:bold; margin-left:5px;'>" . $email . "</span></h3><p style='color:#666; font-size:14px'>首先感谢您选择" . $this->getTitle() . "！为您提供高端定制设计服务：<br>您的邮箱：<b>" . $email . "</b><br>咨询日期：<b>" . date("Y-m-d H:i:s", time()) . "</b><br>您咨询时的IP：<b>" . trim($this->getSrt('ip', $this->request()->ip)) . "</b><br><br>请将《项目需求方案说明书》已附件形式发送至以下电子邮箱：<br>市场部经理：<b>" . $this->getSales(). "</b><br>收到邮件后会有专人为您提供服务。</p><p align='right'>" . $this->getTitle() . "</p><p align='right'>" . date("Y年m月d日", time()) . "</p><div style='width:580px;margin:0 auto;'><div style='padding:10px 10px 0;border-top:1px solid #ccc;color:#747474;margin-bottom:20px;line-height:1.3em;font-size:12px;'><p>此为系统邮件，请勿直接回复！<br>请保管好您的邮箱地址，避免帐号被他人盗用。 <br><a href='" . $this->getSiteURL() . "/terms' target='_blank'>服务条例</a> | <a href='" . $this->getSiteURL() . "/privacy' target='_blank'>隐私声明</a></p></div></div></td></tr></tbody></table></div>";
+        return "<div style='width:640px; background:#fff; border:solid 1px #efefef; margin:0 auto; padding:35px 0 35px 0'><table width='560' border='0' align='center' cellpadding='0' cellspacing='0' style='margin:0 auto; margin-left:30px; margin-right:30px;'><tbody><tr><th valign='middle' style='height: 25px; line-height: 25px; padding: 15px 35px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #42a3d3; background-color: #49bcff; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;'><font face='微软雅黑' size='5' style='color: rgb(255, 255, 255); '>定制设计说明! （" . $this->getTitle() . "）</font></th></tr><tr><td><h3 style='font-weight:normal; font-size:18px; padding:25px 0px 0px 0px;'>尊敬的用户：<span style='font-weight:bold; margin-left:5px;'>" . $email . "</span></h3><p style='color:#666; font-size:14px'>首先感谢您选择" . $this->getTitle() . "！为您提供高端定制设计服务：<br>您的邮箱：<b>" . $email . "</b><br>咨询日期：<b>" . date("Y-m-d H:i:s", time()) . "</b><br>您咨询时的IP：<b>" . trim($this->getSrt('ip', $this->request()->ip)) . "</b><br><br>请将《项目需求方案说明书》已附件形式发送至以下电子邮箱：<br>市场部经理：<b>" . $this->getSales() . "</b><br>收到邮件后会有专人为您提供服务。</p><p align='right'>" . $this->getTitle() . "</p><p align='right'>" . date("Y年m月d日", time()) . "</p><div style='width:580px;margin:0 auto;'><div style='padding:10px 10px 0;border-top:1px solid #ccc;color:#747474;margin-bottom:20px;line-height:1.3em;font-size:12px;'><p>此为系统邮件，请勿直接回复！<br>请保管好您的邮箱地址，避免帐号被他人盗用。 <br><a href='" . $this->getSiteURL() . "/terms' target='_blank'>服务条例</a> | <a href='" . $this->getSiteURL() . "/privacy' target='_blank'>隐私声明</a></p></div></div></td></tr></tbody></table></div>";
     }
 
     // RSA 加密, 解密, 签名, 验签 返回JSON
@@ -269,6 +275,9 @@ class Common extends app\Engine
                     $pattern = '/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-5][0-5])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[1-9]))$/ui';
                 }
                 break;
+            case "content":
+                $pattern = '/([a-zA-Z0-9\/\_\～\-\.\:\·\,\，\、\（\）\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/ui';
+                break;
             default:
                 $pattern = '/^[\w\-\.]{1,32}$/ui';
         }
@@ -282,5 +291,96 @@ class Common extends app\Engine
         list($msec, $sec) = explode(' ', microtime());
         $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
         return $msectime;
+    }
+
+    // 伪原创替换内容
+    public function getReplace($text)
+    {
+        // $dictData = $this->getDict();
+
+        // $i=0;
+        // foreach ($dictData as $key => $val) {
+        //     $i++;
+        //     echo '\''.$key.'\' => \''.$val.'\','.($i%5===0?PHP_EOL:'');
+        // }
+        // exit();
+
+        // print_r(array_flip($dictData));exit();
+
+        // foreach ($dictData as $key => $val) {
+        //     if(strstr($val, "、")) {
+        //         $dict = explode("、",$val);
+        //         echo '\''.$key.'\' => \''.$dict[0].'\','.PHP_EOL;
+        //         for($i = 0; $i < count($dict); $i++) {
+        //             if(!empty($dict[$i+1])) {
+        //                 echo '\''.$dict[$i].'\' => \''.$dict[$i+1].'\','.PHP_EOL;
+        //             }
+        //         }
+        //     } else {
+        //         echo '\''.$key.'\' => \''.$val.'\','.PHP_EOL;
+        //     }
+        // }
+        // exit();
+
+        $replaced = array();
+
+        $text = $this->getSrt('content', $text);
+
+        foreach ($this->getDict() as $key => $val) {
+            if (preg_match("/" . $this->str_to_utf8($key) . "/", $text) && !in_array($key, $replaced)) {
+                $text = str_replace($key, $val, $text);
+                array_push($replaced, $val);
+            }
+        }
+
+        return $text;
+    }
+
+    // 远程获取内容
+    public function getJson($url)
+    {
+        $randIP = $this->getRandIP();
+        $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0';
+        $options =  array(
+            CURLOPT_URL => $url,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_HTTPGET => TRUE,
+            CURLOPT_NOBODY => FALSE,
+            CURLOPT_HEADER => FALSE,
+            CURLOPT_REFERER => $url,
+            CURLOPT_USERAGENT => $user_agent,
+            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_FOLLOWLOCATION => TRUE,
+            CURLOPT_SSL_VERIFYPEER => FALSE,
+            CURLOPT_SSL_VERIFYHOST => FALSE,
+            CURLOPT_HTTPHEADER => array('Content-Type: text/plain', 'X-FORWARDED-FOR:' . $randIP, 'CLIENT-IP:' . $randIP),
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $options);
+        $result = curl_exec($ch);
+        $Code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        return array($this->str_to_utf8($result), $Code);
+    }
+
+    // 访问内容 IP
+    private function getRandIP()
+    {
+        $ip2id = round(rand(600000, 2550000) / 10000);
+        $ip3id = round(rand(600000, 2550000) / 10000);
+        $ip4id = round(rand(600000, 2550000) / 10000);
+        $_array = array('218', '218', '66', '66', '218', '218', '60', '60', '202', '204', '66', '66', '66', '59', '61', '60', '222', '221', '66', '59', '60', '60', '66', '218', '218', '62', '63', '64', '66', '66', '122', '211');
+        $randarr = mt_rand(0, count($_array) - 1);
+        $ip1id = $_array[$randarr];
+        return $ip1id . '.' . $ip2id . '.' . $ip3id . '.' . $ip4id;
+    }
+
+    // 内容转码 UTF-8
+    private function str_to_utf8($str = '')
+    {
+        $current_encode = mb_detect_encoding($str, array("ASCII", "GB2312", "GBK", 'BIG5', 'UTF-8'));
+        $encoded_str = mb_convert_encoding($str, 'UTF-8', $current_encode);
+        return $encoded_str;
     }
 }

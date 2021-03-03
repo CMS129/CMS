@@ -17,6 +17,8 @@ class IndexController extends BaseController
     {
         //parent::__checkManagePrivate();
 
+        echo Api::coms()->getReplace('平凡');
+
         // if (!Api::cookies()->getDoCookie('o2State')) {
         //     Api::cookies()->setCookie('bm', '1');
         //     Api::cookies()->setDoCookie('o2State', '1');
@@ -74,8 +76,8 @@ class IndexController extends BaseController
     {
         $inEmail = Api::coms()->getSrt('email', trim(Api::request()->data['email']));
 
-        if(md5($inEmail) === md5(Api::request()->data['email'])) {
-            if(Api::coms()->getSMTP($inEmail, trim($inEmail), '[' . Api::coms()->getTitle() . '] 定制设计说明', Api::coms()->getContactMB($inEmail))) {
+        if (md5($inEmail) === md5(Api::request()->data['email'])) {
+            if (Api::coms()->getSMTP($inEmail, trim($inEmail), '[' . Api::coms()->getTitle() . '] 定制设计说明', Api::coms()->getContactMB($inEmail))) {
                 Api::json(array('type' => 'success', 'message' => '您的留言已收到，请前往电子邮箱回复《项目需求方案说明书》!!'));
             } else {
                 Api::json(array('type' => 'warning', 'message' => '此电子邮件地址无效,我们无法联系到您!!'));
