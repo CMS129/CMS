@@ -17,6 +17,8 @@ class IndexController extends BaseController
     {
         // parent::__checkManagePrivate();
 
+        // echo Api::coms()->getReplace('内容管理系统');
+
         Api::render('index', array('title' => Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL(), 'email' => Api::coms()->getSupport()));
     }
 

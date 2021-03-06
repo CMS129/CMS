@@ -119,9 +119,9 @@ class Common extends app\Engine
     }
 
     // RSA 公共证书
-    public function getKey($name = 'public')
+    public function getKey($value = 'public')
     {
-        return trim(preg_replace('/[\r\n]/', '', $this->get('web.third')[$name . '.third']));
+        return trim(preg_replace('/[\r\n]/', '', $this->get('web.third')[$value . '.third']));
     }
 
     // 注册成功模板
@@ -185,33 +185,33 @@ class Common extends app\Engine
     }
 
     // 设置数据库链接
-    public function getDB($name = 'db')
+    public function getDB($value = 'db')
     {
-        if (!isset(self::$dbsInstance[$name])) {
+        if (!isset(self::$dbsInstance[$value])) {
             $this->loader->register('getDbPdo', '\app\libs\common\MySQLPDO', array(
-                $this->getDatas()[$name . '.host'],    // 数据库主机地址 默认='127.0.0.1'
-                $this->getDatas()[$name . '.user'],    // 数据库用户名
-                $this->getDatas()[$name . '.pass'],    // 数据库密码
-                $this->getDatas()[$name . '.name'],    // 数据库名称
-                $this->getDatas()[$name . '.charset'], // 数据库编码 默认=utf8
-                $this->getDatas()[$name . '.port'],    // 数据库端口 默认=3306
-                $this->getDatas()[$name . '.prefix'],  // 数据库表前缀
+                $this->getDatas()[$value . '.host'],    // 数据库主机地址 默认='127.0.0.1'
+                $this->getDatas()[$value . '.user'],    // 数据库用户名
+                $this->getDatas()[$value . '.pass'],    // 数据库密码
+                $this->getDatas()[$value . '.name'],    // 数据库名称
+                $this->getDatas()[$value . '.charset'], // 数据库编码 默认=utf8
+                $this->getDatas()[$value . '.port'],    // 数据库端口 默认=3306
+                $this->getDatas()[$value . '.prefix'],  // 数据库表前缀
             ));
             try {
                 $value = $this->getDbPdo();
                 if (!$value) {
                     throw new \Exception();
                 }
-                self::$dbsInstance[$name] = $value;
+                self::$dbsInstance[$value] = $value;
             } catch (\Exception $e) {
                 die(json_encode(array('code' => 500, 'msg' => 'Mysqli数据库连接失败', 'data' => false), JSON_UNESCAPED_UNICODE));
             }
         }
-        return self::$dbsInstance[$name];
+        return self::$dbsInstance[$value];
     }
 
     // 发送 SMTP 邮件
-    public function getSMTP($email = null, $name = null, $Subject = null, $body = null)
+    public function getSMTP($email = null, $value = null, $Subject = null, $body = null)
     {
         $this->loader->register('getSMTPPOP', '\app\libs\common\PHPMailer', array(TRUE));
         try {
@@ -228,7 +228,7 @@ class Common extends app\Engine
 
             //收件人
             $this->getSMTPPOP()->setFrom(trim($this->getDatas()['smtp.user']), $this->getTitle());    // 设置发件人
-            $this->getSMTPPOP()->addAddress(trim($email), trim($name));                               // 添加收件人
+            $this->getSMTPPOP()->addAddress(trim($email), trim($value));                               // 添加收件人
             //$this->getSMTPPOP()->addAddress('ellen@example.com');                                   // 名称可写项
             $this->getSMTPPOP()->addReplyTo(trim($this->getDatas()['smtp.user']), $this->getTitle()); // 添加回复人
             //$this->getSMTPPOP()->addCC('cc@example.com');
@@ -276,7 +276,7 @@ class Common extends app\Engine
                 }
                 break;
             case "content":
-                $pattern = '/([a-zA-Z0-9\/\_\～\-\.\:\·\,\，\、\（\）\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/ui';
+                $pattern = '/([a-zA-Z0-9\/\_\～\-\.\:\·\,\，\\\、\（\）\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/ui';
                 break;
             default:
                 $pattern = '/^[\w\-\.]{1,32}$/ui';
@@ -294,34 +294,34 @@ class Common extends app\Engine
     }
 
     // 伪原创替换内容
-    public function getReplace($text)
+    public function getReplace($value)
     {
         $replaced = array();
 
-        $text = $this->getSrt('content', $text);
+        $value = $this->getSrt('content', $value);
 
         foreach ($this->getDict() as $key => $val) {
-            if (preg_match("/" . $key . "/", $text) && !in_array($key, $replaced)) {
-                $text = str_replace($key, $val, $text);
+            if (preg_match("/" . $key . "/", $value) && !in_array($key, $replaced)) {
+                $value = str_replace($key, $val, $value);
                 array_push($replaced, $val);
             }
         }
 
-        return $text;
+        return $value;
     }
 
     // 远程获取内容
-    public function getJson($url)
+    public function getJson($value)
     {
         $randIP = $this->getRandIP();
         $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0';
         $options =  array(
-            CURLOPT_URL => $url,
+            CURLOPT_URL => $value,
             CURLOPT_TIMEOUT => 15,
             CURLOPT_HTTPGET => TRUE,
             CURLOPT_NOBODY => FALSE,
             CURLOPT_HEADER => FALSE,
-            CURLOPT_REFERER => $url,
+            CURLOPT_REFERER => $value,
             CURLOPT_USERAGENT => $user_agent,
             CURLOPT_RETURNTRANSFER => TRUE,
             CURLOPT_FOLLOWLOCATION => TRUE,
@@ -351,10 +351,58 @@ class Common extends app\Engine
     }
 
     // 内容转码 UTF-8
-    private function str_to_utf8($str = '')
+    private function str_to_utf8($value = '')
     {
-        $current_encode = mb_detect_encoding($str, array("ASCII", "GB2312", "GBK", 'BIG5', 'UTF-8'));
-        $encoded_str = mb_convert_encoding($str, 'UTF-8', $current_encode);
+        $current_encode = mb_detect_encoding($value, array("ASCII", "GB2312", "GBK", 'BIG5', 'UTF-8'));
+        $encoded_str = mb_convert_encoding($value, 'UTF-8', $current_encode);
         return $encoded_str;
+    }
+
+    // Unicode 编码
+    public function unicode_encode($value)
+    {
+        $value = $this->getSrt('content', $value);
+        $strArr = preg_split('/(?<!^)(?!$)/u', $value);
+        $resUnicode = '';
+        foreach ($strArr as $str) {
+            $bin_str = '';
+            $arr = is_array($str) ? $str : str_split($str);
+            foreach ($arr as $value) {
+                $bin_str .= decbin(ord($value));
+            }
+            $bin_str = preg_replace('/^.{4}(.{4}).{2}(.{6}).{2}(.{6})$/', '$1$2$3', $bin_str);
+            $unicode = dechex(bindec($bin_str));
+            $_sup = '';
+            for ($i = 0; $i < 4 - strlen($unicode); $i++) {
+                $_sup .= '0';
+            }
+            $str = '\\u' . $_sup . $unicode;
+            $resUnicode .= $str;
+        }
+        return $resUnicode;
+    }
+
+    // Unicode 解码
+    public function unicode_decode($value)
+    {
+        $value = $this->getSrt('content', $value);
+        $pattern = '/([\w]+)|(\\\u([\w]{4}))/i';
+        preg_match_all($pattern, $value, $matches);
+        if (!empty($matches)) {
+            $value = '';
+            for ($j = 0; $j < count($matches[0]); $j++) {
+                $str = $matches[0][$j];
+                if (strpos($str, '\\u') === 0) {
+                    $code = base_convert(substr($str, 2, 2), 16, 10);
+                    $code2 = base_convert(substr($str, 4), 16, 10);
+                    $c = chr($code) . chr($code2);
+                    $c = iconv('UCS-2', 'UTF-8', $c);
+                    $value .= $c;
+                } else {
+                    $value .= $str;
+                }
+            }
+        }
+        return $value;
     }
 }
