@@ -3,7 +3,7 @@
 return array(
 # ======> 公共配置
     # 网站名称
-    'title' => 'HRMCMS官方网站',
+    'title' => 'HRMCMS',
     # 法务邮箱
     'support' => 'support@129.co',
     # 市场邮箱

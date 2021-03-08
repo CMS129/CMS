@@ -95,7 +95,7 @@
                 <div class="messages"></div>
                 <div class="alert" style="color: #ffffff; display: none;" id="alert_message">内容不能为空</div>
                 <div class="input-group">
-                    <textarea type="hidden" id="text-word" name="word" style="width:100%; height:500px;"></textarea>
+                    <textarea type="hidden" id="text-word" name="word" style="width:100%; height:25.25rem; margin-bottom: 1.25rem;"></textarea>
                     <p class="input-group-addon">
                         <button id="submit_button" type="submit" class="btn btn-primary active">立即伪原创</button>
                     </p>
