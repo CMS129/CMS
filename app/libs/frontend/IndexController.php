@@ -17,8 +17,6 @@ class IndexController extends BaseController
     {
         // parent::__checkManagePrivate();
 
-        // echo Api::coms()->getReplace('内容管理系统');
-
         Api::render('index', array('title' => Api::coms()->getTitle(), 'site_url' => Api::coms()->getSiteURL(), 'email' => Api::coms()->getSupport()));
     }
 
@@ -51,6 +49,29 @@ class IndexController extends BaseController
             } else {
                 Api::json(array('type' => 'warning', 'message' => '此电子邮件地址无效,我们无法联系到您!!'));
             }
+        } else {
+            Api::json(array('type' => 'danger', 'message' => '恶意提交，您的ip已永久记录在数据库中!!'));
+        }
+    }
+
+    /**
+     * 伪原创
+     */
+    public static function word()
+    {
+        Api::render('word', array('title' => Api::coms()->getTitle(), 'seo_title' => 'SEO伪原创', 'site_url' => Api::coms()->getSiteURL(), 'email' => Api::coms()->getSupport()));
+    }
+
+    /**
+     * 伪原创数据
+     */
+    public static function wyc()
+    {
+        $inWord = Api::coms()->getSrt('content', trim(Api::request()->data['word']));
+
+        if (md5($inWord) === md5(Api::request()->data['word'])) {
+            $newWord = Api::coms()->getReplace($inWord);
+            Api::json(array('type' => 'success', 'data' => $newWord, 'message' => '转换成功!!'));
         } else {
             Api::json(array('type' => 'danger', 'message' => '恶意提交，您的ip已永久记录在数据库中!!'));
         }

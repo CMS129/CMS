@@ -447,7 +447,7 @@ body[data-aos-easing="ease"] {
 .hero-section .content p {
 	color: #fff;
 	margin-bottom: 30px;
-	padding: 0 10%;
+	/* padding: 0 10%; */
 }
 
 .hero-section.auto-height .hero-wrap {

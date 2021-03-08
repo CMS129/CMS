@@ -5,6 +5,8 @@ return array(
     'auth'=>'index,user,admin,list,data,error', // 默认需要认证模型
     'index' => array(
         array('GET|POST /((@cid:[0-9]+/)@page:[0-9]+)', 'frontend\Index:index'),
+        array('POST /wyc', 'frontend\Index:wyc'),
+        array('GET /word', 'frontend\Index:word'),
         array('GET /terms', 'frontend\Index:terms'),
         array('GET /search', 'frontend\Index:search'),
         array('GET /privacy', 'frontend\Index:privacy'),

@@ -37,7 +37,7 @@
         <div class="container">
 
             <!-- Start Header Navigation -->
-            <a class="logo-link smooth-menu" href="#home">
+            <a class="logo-link smooth-menu" href="{$site_url}/">
                 <img src="{$site_url}/assets/img/logo.png" class="logo logo-display kanakku_logo" alt="{$title}">
                 <img src="{$site_url}/assets/img/logo-small.png" class="logo logo-scrolled" alt="{$title}">
             </a>
@@ -49,7 +49,7 @@
             <div class="collapse navbar-collapse" id="navbar-menu">
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="smooth-menu nav-link" href="#home">首页</a>
+                        <a class="smooth-menu nav-link" href="{$site_url}/">首页</a>
                     </li>
                     <li class="nav-item">
                         <a class="smooth-menu nav-link" href="#features">功能</a>
@@ -65,6 +65,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="smooth-menu nav-link" href="#overview">网页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="smooth-menu nav-link" href="{$site_url}/word">伪原创</a>
                     </li>
                 </ul>
             </div>
@@ -400,6 +403,45 @@
 </div>
 
 {include('_footer.php')}
+
+<script>
+$(function() {
+	$('#contact-form').on('submit', function(e) {
+		if (!e.isDefaultPrevented()) {
+			//console.log('messages');
+			var re = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/;
+			var emailFormat = re.test($("#form_email").val());
+			if (emailFormat) {
+				$('#alert_message').css({
+					'display': 'none'
+				})
+				var url = "{$site_url}/contact";
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: $(this).serialize(),
+					success: function(data) {
+						var messageAlert = 'alert-' + data.type;
+						var messageText = data.message;
+						var alertBox = '<div class="alert ' + messageAlert + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + messageText + '</div>';
+						if (messageAlert && messageText) {
+							$('#contact-form').find('.messages').html(alertBox);
+							$('#contact-form')[0].reset();
+						}
+					}
+				});
+			} else {
+				$('#alert_message').css({
+					'display': 'block'
+				});
+				$('#form_email').focus();
+				return false;
+			}
+			return false;
+		}
+	})
+});
+</script>
 
 </body>
 </html>

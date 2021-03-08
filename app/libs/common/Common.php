@@ -198,11 +198,11 @@ class Common extends app\Engine
                 $this->getDatas()[$value . '.prefix'],  // 数据库表前缀
             ));
             try {
-                $value = $this->getDbPdo();
-                if (!$value) {
+                $name = $this->getDbPdo();
+                if (!$name) {
                     throw new \Exception();
                 }
-                self::$dbsInstance[$value] = $value;
+                self::$dbsInstance[$value] = $name;
             } catch (\Exception $e) {
                 die(json_encode(array('code' => 500, 'msg' => 'Mysqli数据库连接失败', 'data' => false), JSON_UNESCAPED_UNICODE));
             }
@@ -276,7 +276,7 @@ class Common extends app\Engine
                 }
                 break;
             case "content":
-                $pattern = '/([a-zA-Z0-9\/\_\～\-\.\:\·\,\，\\\、\（\）\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/ui';
+                $pattern = '/([a-zA-Z0-9\/\_\～\+\-\.\:\·\,\，\。\\\、\（\）\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+|[\x{4e00}-\x{9fa5}]+)/ui';
                 break;
             default:
                 $pattern = '/^[\w\-\.]{1,32}$/ui';
