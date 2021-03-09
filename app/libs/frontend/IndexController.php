@@ -72,7 +72,7 @@ class IndexController extends BaseController
 
         if (md5(trim($inWord)) === md5(trim(Api::request()->data['word']))) {
             $newWord = Api::coms()->getReplace($inWord);
-            Api::json(array('type' => 'success', 'data' => $newWord[0], 'message' => '总切词 '.mb_strlen($newWord[0],'UTF8').' 个，免费用户随机替换 '.count($newWord[1]).' 个【升级VIP后可替换到 '.count($newWord[1]).' 个】，伪原创模式 轻微伪原创 '.ceil(ceil(mb_strlen(implode("", $newWord[1]),'UTF8'))/ceil(mb_strlen($newWord[0],'UTF8'))*100).'%'));
+            Api::json(array('type' => 'success', 'data' => $newWord[0], 'message' => '总切词 '.mb_strlen($newWord[0],'UTF8').' 个，免费用户随机替换 '.count($newWord[1]).' 个【升级VIP后可替换到 '.count($newWord[1]).' 个】，伪原创模式 轻微伪原创 '.ceil(ceil(mb_strlen(implode("", $newWord[1]),'UTF8'))/ceil(mb_strlen($newWord[0],'UTF8'))*100).'%，内容被收录指数'.(100-ceil(ceil(mb_strlen(implode("", Api::coms()->getWordStop($inWord)[1]),'UTF8'))/ceil(mb_strlen(Api::coms()->getWordStop($inWord)[0],'UTF8'))*100)).'分。'));
         } else {
             Api::json(array('type' => 'danger', 'message' => '恶意提交，内容中有非法字符串!!'));
         }

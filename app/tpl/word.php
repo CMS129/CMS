@@ -67,7 +67,7 @@
                         <a class="smooth-menu nav-link" href="{$site_url}/#overview">网页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="smooth-menu nav-link" href="{$site_url}/word">伪原创</a>
+                        <a class="smooth-menu nav-link" href="{$site_url}/word">AI伪原创</a>
                     </li>
                 </ul>
             </div>

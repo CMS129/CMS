@@ -301,9 +301,26 @@ class Common extends app\Engine
 
         $value = $this->getSrt('content', $value);
 
-        foreach ($this->getDict() as $key => $val) {
+        foreach ($this->getDict()['word'] as $key => $val) {
             if (preg_match("/" . $key . "/", $value) && !in_array($key, $replaced)) {
-                $value = preg_replace("/"  .$key . "/", $val, $value, 1);
+                $value = preg_replace("/"  . $key . "/", $val, $value, 1);
+                array_push($replaced, $val);
+            }
+        }
+
+        return array($value,$replaced);
+    }
+
+    // 停用词替换内容
+    public function getWordStop($value)
+    {
+        $replaced = array();
+
+        $value = $this->getSrt('content', $value);
+
+        foreach ($this->getDict()['stop'] as $val) {
+            if (preg_match("/" . $val . "/", $value) && !in_array($val, $replaced)) {
+                $value = preg_replace("/"  . $val . "/", $val, $value);
                 array_push($replaced, $val);
             }
         }
