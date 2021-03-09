@@ -84,7 +84,7 @@ $dbData = Api::coms()->getDB()->where(array('user_name'=>'tongji'))->delete('use
 $dbData = Api::coms()->getDB()->commit();
 
 
-echo Api::coms()->getReplace('内容管理系统');
+print_r(Api::coms()->getReplace('内容管理系统'));
 
 if (!Api::cookies()->getDoCookie('o2State')) {
     Api::cookies()->setCookie('bm', '1');

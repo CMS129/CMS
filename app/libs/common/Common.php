@@ -276,11 +276,12 @@ class Common extends app\Engine
                 }
                 break;
             case "content":
-                $pattern = '/([a-zA-Z0-9\/\_\～\+\-\.\:\·\,\，\。\？\！\?\!\%\\\、\（\）\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+)/ui';
+                $pattern = '/([a-zA-Z0-9\/\_\～\+\-\.\:\：\·\“\”\/\,\，\。\？\！\?\!\%\\\、\（\）\(\)\s]+|[\x{4e00}-\x{9fff}]+|[\x{0800}-\x{4e00}]+|[\x{AC00}-\x{D7A3}]+)/ui';
                 break;
             default:
                 $pattern = '/^[\w\-\.]{1,32}$/ui';
         }
+        $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
         preg_match_all($pattern, $value, $match);
         return !empty($match[0]) ? trim(implode('', $match[0])) : FALSE;
     }
@@ -302,12 +303,12 @@ class Common extends app\Engine
 
         foreach ($this->getDict() as $key => $val) {
             if (preg_match("/" . $key . "/", $value) && !in_array($key, $replaced)) {
-                $value = str_replace($key, $val, $value);
+                $value = preg_replace("/"  .$key . "/", $val, $value, 1);
                 array_push($replaced, $val);
             }
         }
 
-        return $value;
+        return array($value,$replaced);
     }
 
     // 远程获取内容

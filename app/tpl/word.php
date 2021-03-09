@@ -93,7 +93,7 @@
             </div>
             <form id="word-form" method="post" novalidate="true">
                 <div class="messages"></div>
-                <div class="alert" style="color: #ffffff; display: none;" id="alert_message">内容不能为空</div>
+                <div class="alert btn-warning alert-dismissable" style="color: #ffffff; display: none;" id="alert_message">内容不能为空</div>
                 <div class="input-group">
                     <textarea type="hidden" id="text-word" name="word" style="width:100%; height:25.25rem; margin-bottom: 1.25rem;"></textarea>
                     <p class="input-group-addon">
